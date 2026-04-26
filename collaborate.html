@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collaborate — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .collab-wrapper { max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; }
+    .collab-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+
+    /* Pair Coding */
+    .pair-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+    .pair-rooms { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .room-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 18px; display: flex; align-items: center; gap: 16px; transition: all 0.2s; }
+    .room-card:hover { border-color: var(--border2); transform: translateX(3px); }
+    .room-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .room-info { flex: 1; }
+    .room-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 3px; }
+    .room-desc { font-size: 0.82rem; color: var(--text2); }
+    .room-meta { display: flex; align-items: center; gap: 8px; }
+    .room-count { font-size: 0.8rem; color: var(--text3); }
+    .room-status { width: 8px; height: 8px; border-radius: 50%; }
+    .room-status.open { background: var(--green); }
+    .room-status.full { background: var(--red); }
+    .join-btn { padding: 7px 18px; border-radius: 8px; font-size: 0.83rem; font-weight: 700; background: var(--accent); color: #fff; transition: all 0.2s; }
+    .join-btn:hover { background: #3a7ee6; }
+    .join-btn:disabled { background: var(--bg3); color: var(--text3); cursor: not-allowed; }
+
+    /* Study Group */
+    .group-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .group-header { padding: 16px 18px; background: var(--bg3); border-bottom: 1px solid var(--border); font-size: 0.88rem; font-weight: 700; }
+    .group-body { padding: 16px; }
+    .member-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .member { display: flex; align-items: center; gap: 10px; }
+    .member-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; }
+    .member-name { font-size: 0.87rem; font-weight: 600; }
+    .member-status { font-size: 0.76rem; color: var(--text3); }
+    .online-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
+    .online-dot.online { background: var(--green); }
+    .online-dot.away { background: var(--yellow); }
+
+    /* Board */
+    .board-section { grid-column: 1 / -1; margin-top: 8px; }
+    .board-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
+    .board-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; }
+    .board-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .board-col { background: var(--bg3); border-radius: 12px; padding: 14px; min-height: 200px; }
+    .board-col-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .task-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 0.85rem; cursor: grab; transition: all 0.2s; }
+    .task-card:hover { border-color: var(--accent); }
+    .task-tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-bottom: 4px; }
+    .add-task-input { width: 100%; padding: 7px 10px; background: transparent; border: 1px dashed var(--border2); border-radius: 7px; color: var(--text); font-size: 0.83rem; margin-top: 6px; }
+
+    @media (max-width: 900px) { .collab-grid { grid-template-columns: 1fr; } .board-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="page-hero">
+    <div class="page-tag">Team Learning</div>
+    <h1>Learn <em>Together</em></h1>
+    <p>Pair programming rooms, study groups, and a shared project board for team projects</p>
+  </div>
+
+  <div class="collab-wrapper">
+    <div class="collab-grid">
+      <div class="pair-section">
+        <h2>🖥️ Pair Programming Rooms</h2>
+        <div class="pair-rooms" id="pairRooms">
+          <div class="room-card">
+            <div class="room-icon" style="background:rgba(79,142,247,0.15)">💻</div>
+            <div class="room-info">
+              <div class="room-name">HTML & CSS Lab</div>
+              <div class="room-desc">Build a responsive landing page together · Unit I</div>
+            </div>
+            <div class="room-meta">
+              <div class="room-status open"></div>
+              <span class="room-count">2/4</span>
+              <button class="join-btn" onclick="joinRoom('HTML & CSS Lab')">Join</button>
+            </div>
+          </div>
+          <div class="room-card">
+            <div class="room-icon" style="background:rgba(245,200,66,0.15)">⚡</div>
+            <div class="room-info">
+              <div class="room-name">JavaScript Debug Session</div>
+              <div class="room-desc">Fixing async bugs in a real project · Unit III</div>
+            </div>
+            <div class="room-meta">
+              <div class="room-status open"></div>
+              <span class="room-count">1/4</span>
+              <button class="join-btn" onclick="joinRoom('JavaScript Debug Session')">Join</button>
+            </div>
+          </div>
+          <div class="room-card">
+            <div class="room-icon" style="background:rgba(49,120,198,0.15)">🔷</div>
+            <div class="room-info">
+              <div class="room-name">TypeScript Workshop</div>
+              <div class="room-desc">Building a typed REST client · Unit IV</div>
+            </div>
+            <div class="room-meta">
+              <div class="room-status open"></div>
+              <span class="room-count">3/4</span>
+              <button class="join-btn" onclick="joinRoom('TypeScript Workshop')">Join</button>
+            </div>
+          </div>
+          <div class="room-card">
+            <div class="room-icon" style="background:rgba(242,87,87,0.15)">🚀</div>
+            <div class="room-info">
+              <div class="room-name">Full-Stack Project Room</div>
+              <div class="room-desc">Node.js + React full-stack app · Unit V</div>
+            </div>
+            <div class="room-meta">
+              <div class="room-status full"></div>
+              <span class="room-count">4/4 Full</span>
+              <button class="join-btn" disabled>Full</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="margin-bottom:24px;" onclick="createRoom()">+ Create New Room</button>
+
+        <!-- Activity Feed -->
+        <h2>📢 Activity Feed</h2>
+        <div id="activityFeed" style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.85rem;">
+            <span style="color:var(--accent);font-weight:600;">Ananya</span> completed Unit I quiz with 9/10 · <span style="color:var(--text3);">10 min ago</span>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.85rem;">
+            <span style="color:var(--green);font-weight:600;">Rahul</span> joined HTML & CSS Lab · <span style="color:var(--text3);">23 min ago</span>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.85rem;">
+            <span style="color:var(--yellow);font-weight:600;">Priya</span> posted a question in JS Debug room · <span style="color:var(--text3);">1 hour ago</span>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.85rem;">
+            <span style="color:var(--accent2);font-weight:600;">Karan</span> completed TypeScript Workshop · <span style="color:var(--text3);">2 hours ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div>
+        <div class="group-card" style="margin-bottom:16px;">
+          <div class="group-header">👥 Study Group — Batch 24A</div>
+          <div class="group-body">
+            <div class="member-list">
+              <div class="member">
+                <div class="member-avatar" style="background:#4f8ef7">P</div>
+                <div><div class="member-name">Prof. Sharma</div><div class="member-status"><span class="online-dot online"></span>Online · Instructor</div></div>
+              </div>
+              <div class="member">
+                <div class="member-avatar" style="background:#22c27a">A</div>
+                <div><div class="member-name">Ananya Singh</div><div class="member-status"><span class="online-dot online"></span>Online · Unit III</div></div>
+              </div>
+              <div class="member">
+                <div class="member-avatar" style="background:#f5c842">R</div>
+                <div><div class="member-name">Rahul Verma</div><div class="member-status"><span class="online-dot online"></span>Online · Unit II</div></div>
+              </div>
+              <div class="member">
+                <div class="member-avatar" style="background:#f25757">P</div>
+                <div><div class="member-name">Priya Nair</div><div class="member-status"><span class="online-dot away"></span>Away · Unit I</div></div>
+              </div>
+              <div class="member">
+                <div class="member-avatar" style="background:#7c5ff7">K</div>
+                <div><div class="member-name">Karan Mehta</div><div class="member-status"><span class="online-dot online"></span>Online · Unit IV</div></div>
+              </div>
+            </div>
+            <div id="myMember" style="display:none;" class="member">
+              <div class="member-avatar" style="background:var(--accent)" id="myAvatar">Y</div>
+              <div><div class="member-name" id="myName">You</div><div class="member-status"><span class="online-dot online"></span>Online</div></div>
+            </div>
+            <button class="btn-primary" style="width:100%;margin-top:8px;" onclick="joinGroup()">Join Group</button>
+          </div>
+        </div>
+
+        <!-- Progress Leaderboard -->
+        <div class="group-card">
+          <div class="group-header">🏆 Unit Progress Leaderboard</div>
+          <div class="group-body">
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-family:var(--font-head);font-size:1.1rem;color:var(--yellow);min-width:24px;">1</span>
+                <div style="width:28px;height:28px;border-radius:50%;background:#22c27a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">A</div>
+                <div style="flex:1;"><div style="font-size:0.85rem;font-weight:600;">Ananya</div><div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:3px;"><div style="height:100%;background:var(--green);border-radius:2px;width:85%;"></div></div></div>
+                <span style="font-size:0.82rem;font-weight:700;color:var(--green);">85%</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-family:var(--font-head);font-size:1.1rem;color:var(--text2);min-width:24px;">2</span>
+                <div style="width:28px;height:28px;border-radius:50%;background:#7c5ff7;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">K</div>
+                <div style="flex:1;"><div style="font-size:0.85rem;font-weight:600;">Karan</div><div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:3px;"><div style="height:100%;background:var(--accent2);border-radius:2px;width:72%;"></div></div></div>
+                <span style="font-size:0.82rem;font-weight:700;color:var(--accent2);">72%</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-family:var(--font-head);font-size:1.1rem;color:var(--text3);min-width:24px;">3</span>
+                <div style="width:28px;height:28px;border-radius:50%;background:#f5c842;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">R</div>
+                <div style="flex:1;"><div style="font-size:0.85rem;font-weight:600;">Rahul</div><div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:3px;"><div style="height:100%;background:var(--yellow);border-radius:2px;width:58%;"></div></div></div>
+                <span style="font-size:0.82rem;font-weight:700;color:var(--yellow);">58%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kanban Board -->
+      <div class="board-section">
+        <div class="board-card">
+          <h3>📋 Project Board — Team Tasks</h3>
+          <div class="board-grid">
+            <div class="board-col">
+              <div class="board-col-title">📋 To Do <span id="todoCount" style="background:var(--border);padding:2px 7px;border-radius:10px;font-size:0.72rem;color:var(--text3);">3</span></div>
+              <div id="todoCol">
+                <div class="task-card"><div class="task-tag" style="background:rgba(255,100,50,0.15);color:#ff6432;">HTML</div><div>Build responsive navbar</div></div>
+                <div class="task-card"><div class="task-tag" style="background:rgba(245,200,66,0.15);color:var(--yellow);">JS</div><div>Add form validation</div></div>
+                <div class="task-card"><div class="task-tag" style="background:rgba(49,120,198,0.15);color:#3178c6;">TS</div><div>Define User interface</div></div>
+              </div>
+              <input class="add-task-input" placeholder="+ Add task..." onkeydown="addTask(event,'todoCol','todoCount')" />
+            </div>
+            <div class="board-col">
+              <div class="board-col-title">🔄 In Progress <span id="inpCount" style="background:var(--border);padding:2px 7px;border-radius:10px;font-size:0.72rem;color:var(--text3);">2</span></div>
+              <div id="inpCol">
+                <div class="task-card"><div class="task-tag" style="background:rgba(38,170,225,0.15);color:#26aae1;">CSS</div><div>Style quiz component</div></div>
+                <div class="task-card"><div class="task-tag" style="background:rgba(34,194,122,0.15);color:var(--green);">Node</div><div>Set up Express routes</div></div>
+              </div>
+              <input class="add-task-input" placeholder="+ Add task..." onkeydown="addTask(event,'inpCol','inpCount')" />
+            </div>
+            <div class="board-col">
+              <div class="board-col-title">✅ Done <span id="doneCount" style="background:var(--border);padding:2px 7px;border-radius:10px;font-size:0.72rem;color:var(--text3);">4</span></div>
+              <div id="doneCol">
+                <div class="task-card" style="opacity:0.6;"><div class="task-tag" style="background:rgba(79,142,247,0.15);color:var(--accent);">HTML</div><div style="text-decoration:line-through;">Create HTML boilerplate</div></div>
+                <div class="task-card" style="opacity:0.6;"><div class="task-tag" style="background:rgba(38,170,225,0.15);color:#26aae1;">CSS</div><div style="text-decoration:line-through;">Set up CSS variables</div></div>
+                <div class="task-card" style="opacity:0.6;"><div class="task-tag" style="background:rgba(245,200,66,0.15);color:var(--yellow);">JS</div><div style="text-decoration:line-through;">Implement localStorage</div></div>
+                <div class="task-card" style="opacity:0.6;"><div class="task-tag" style="background:rgba(34,194,122,0.15);color:var(--green);">Node</div><div style="text-decoration:line-through;">Create package.json</div></div>
+              </div>
+              <input class="add-task-input" placeholder="+ Add task..." onkeydown="addTask(event,'doneCol','doneCount')" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+
+    function joinRoom(name) {
+      showToast('success', `✓ Joined "${name}"! Opening pair session...`);
+      setTimeout(() => location.href = 'classroom.html', 1200);
+    }
+
+    function createRoom() {
+      const name = prompt('Room name:');
+      if (!name) return;
+      const div = document.createElement('div');
+      div.className = 'room-card';
+      div.innerHTML = `<div class="room-icon" style="background:rgba(124,95,247,0.15)">🆕</div><div class="room-info"><div class="room-name">${name}</div><div class="room-desc">Your custom room · Open to all</div></div><div class="room-meta"><div class="room-status open"></div><span class="room-count">1/4</span><button class="join-btn" onclick="joinRoom('${name}')">Join</button></div>`;
+      document.getElementById('pairRooms').appendChild(div);
+      showToast('success', `✓ Room "${name}" created!`);
+    }
+
+    function joinGroup() {
+      const user = JSON.parse(localStorage.getItem('edusphere_current') || '{}');
+      const name = user.firstName || 'You';
+      document.getElementById('myMember').style.display = 'flex';
+      document.getElementById('myName').textContent = name;
+      document.getElementById('myAvatar').textContent = name[0].toUpperCase();
+      showToast('success', `✓ Joined study group, ${name}!`);
+    }
+
+    function addTask(e, colId, countId) {
+      if (e.key !== 'Enter') return;
+      const text = e.target.value.trim();
+      if (!text) return;
+      const card = document.createElement('div');
+      card.className = 'task-card';
+      card.innerHTML = `<div>${text}</div>`;
+      document.getElementById(colId).appendChild(card);
+      const cnt = document.getElementById(countId);
+      cnt.textContent = parseInt(cnt.textContent) + 1;
+      e.target.value = '';
+    }
+  </script>
+</body>
+</html>

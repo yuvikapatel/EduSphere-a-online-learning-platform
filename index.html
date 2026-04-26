@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduSphere — Virtual Classroom</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="home.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span> Live Sessions Available Now</div>
+      <h1 class="hero-title">Where Learning<br /><em>Comes Alive</em></h1>
+      <p class="hero-sub">A next-generation virtual classroom for full-stack web development mastery — interactive, real-time, and deeply engaging.</p>
+      <div class="hero-cta">
+        <a href="classroom.html"><button class="btn-hero-primary">Enter Classroom <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></a>
+        <a href="curriculum.html"><button class="btn-hero-outline">View Curriculum</button></a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num" data-target="6">0</span><span class="stat-label">Units</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num" data-target="48">0</span><span class="stat-label">Lessons</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num" data-target="1240">0</span><span class="stat-label">Learners</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item"><span class="stat-num" data-target="98">0</span><span class="stat-suffix">%</span><span class="stat-label">Satisfaction</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="code-window">
+        <div class="window-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="window-title">main.ts — EduSphere</span>
+        </div>
+        <div class="code-content">
+          <div class="code-line"><span class="kw">interface</span> <span class="type">Student</span> <span class="punct">{</span></div>
+          <div class="code-line pad"><span class="prop">name</span><span class="punct">:</span> <span class="type">string</span><span class="punct">;</span></div>
+          <div class="code-line pad"><span class="prop">goals</span><span class="punct">:</span> <span class="type">string[]</span><span class="punct">;</span></div>
+          <div class="code-line pad"><span class="prop">progress</span><span class="punct">:</span> <span class="type">Promise</span><span class="punct">&lt;</span><span class="type">Mastery</span><span class="punct">&gt;;</span></div>
+          <div class="code-line"><span class="punct">}</span></div>
+          <div class="code-line">&nbsp;</div>
+          <div class="code-line"><span class="kw">const</span> <span class="var">learn</span> <span class="punct">=</span> <span class="kw">async</span> <span class="punct">(</span><span class="var">s</span><span class="punct">:</span> <span class="type">Student</span><span class="punct">)</span> <span class="punct">=&gt; {</span></div>
+          <div class="code-line pad"><span class="kw">await</span> <span class="fn">s.progress</span><span class="punct">;</span></div>
+          <div class="code-line pad"><span class="fn">console</span><span class="punct">.</span><span class="fn">log</span><span class="punct">(</span><span class="str">`✓ Mastered!`</span><span class="punct">);</span></div>
+          <div class="code-line"><span class="punct">};</span></div>
+          <div class="code-line cursor-line"><span class="cursor">|</span></div>
+        </div>
+      </div>
+      <div class="float-card card-ts"><span class="fc-icon">TS</span><div><div class="fc-title">TypeScript Ready</div><div class="fc-sub">Type-safe from Day 1</div></div></div>
+      <div class="float-card card-live"><span class="fc-dot live"></span><div><div class="fc-title">Live Collaboration</div><div class="fc-sub" id="liveCount">12 students active</div></div></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section features-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Why EduSphere</span>
+        <h2 class="section-title">Everything You Need to <em>Master</em> Web Dev</h2>
+        <p class="section-desc">Six curriculum units, live classroom, interactive tools, and real-time collaboration — all in one place.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(79,142,247,0.15);color:var(--accent)">📚</div>
+          <h3>Deep Curriculum</h3>
+          <p>HTML → CSS → JS → TypeScript — structured units with real project-driven lessons.</p>
+          <a href="curriculum.html" class="feat-link">Explore →</a>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(34,194,122,0.15);color:var(--green)">🎥</div>
+          <h3>Live Classroom</h3>
+          <p>Join live sessions with camera, mic, and screen sharing. Real instructor-led classes.</p>
+          <a href="classroom.html" class="feat-link">Enter →</a>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(124,95,247,0.15);color:var(--accent2)">🛠️</div>
+          <h3>Dev Tools</h3>
+          <p>Code editor, live preview, terminal, and debugger built right into the browser.</p>
+          <a href="tools.html" class="feat-link">Open →</a>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(245,200,66,0.15);color:var(--yellow)">🤝</div>
+          <h3>Collaborate</h3>
+          <p>Pair programming, group projects, chat, and code review — learn together.</p>
+          <a href="collaborate.html" class="feat-link">Join →</a>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(245,140,66,0.15);color:var(--orange)">📖</div>
+          <h3>Resources</h3>
+          <p>Cheat sheets, references, and deep-dives for HTML, CSS, and JavaScript.</p>
+          <a href="resources.html" class="feat-link">Browse →</a>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(242,87,87,0.15);color:var(--red)">🧪</div>
+          <h3>Quizzes</h3>
+          <p>Test your knowledge with per-unit quizzes, instant feedback, and score tracking.</p>
+          <a href="quiz.html" class="feat-link">Take Quiz →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNITS PREVIEW -->
+  <section class="section" style="background:var(--bg2);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Full Curriculum</span>
+        <h2 class="section-title">Six Units to <em>Mastery</em></h2>
+        <p class="section-desc">From semantic HTML to production TypeScript — every concept hands-on and project-driven.</p>
+      </div>
+      <div class="units-preview-grid">
+        <div class="unit-preview" onclick="location.href='curriculum.html#unit1'">
+          <span class="up-num">I</span>
+          <div class="up-badge html">HTML & CSS</div>
+          <h4>Foundations</h4>
+          <p>Semantic markup, Flexbox, Grid, responsive design</p>
+        </div>
+        <div class="unit-preview" onclick="location.href='curriculum.html#unit2'">
+          <span class="up-num">II</span>
+          <div class="up-badge js">JavaScript</div>
+          <h4>JS Fundamentals</h4>
+          <p>Variables, functions, arrays, DOM interaction</p>
+        </div>
+        <div class="unit-preview" onclick="location.href='curriculum.html#unit3'">
+          <span class="up-num">III</span>
+          <div class="up-badge adv">Advanced JS</div>
+          <h4>Async & Advanced</h4>
+          <p>Promises, async/await, closures, prototypes</p>
+        </div>
+        <div class="unit-preview" onclick="location.href='curriculum.html#unit4'">
+          <span class="up-num">IV</span>
+          <div class="up-badge ts">TypeScript</div>
+          <h4>TypeScript</h4>
+          <p>Types, interfaces, generics, decorators</p>
+        </div>
+        <div class="unit-preview" onclick="location.href='curriculum.html#unit5'">
+          <span class="up-num">V</span>
+          <div class="up-badge full">Full-Stack</div>
+          <h4>Full-Stack Dev</h4>
+          <p>Node.js, Express, REST APIs, databases</p>
+        </div>
+        <div class="unit-preview" onclick="location.href='curriculum.html#unit6'">
+          <span class="up-num">VI</span>
+          <div class="up-badge tools">Tooling</div>
+          <h4>Tools & Deploy</h4>
+          <p>Git, Webpack, Docker, CI/CD pipelines</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:36px;">
+        <a href="curriculum.html"><button class="btn-primary" style="padding:13px 32px;font-size:0.95rem;">View Full Curriculum →</button></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Ready to Start Your Journey?</h2>
+        <p>Join 1,240+ learners already building real-world skills on EduSphere.</p>
+        <a href="enroll.html"><button class="btn-hero-primary">Enroll Free Today <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></a>
+      </div>
+    </div>
+  </section>
+
+  <script src="shared.js"></script>
+  <script src="nav.js"></script>
+  <script>
+    injectFooter();
+
+    // Animate stats
+    document.querySelectorAll('.stat-num').forEach(el => {
+      const target = +el.dataset.target;
+      let count = 0;
+      const step = Math.ceil(target / 60);
+      const interval = setInterval(() => {
+        count = Math.min(count + step, target);
+        el.textContent = count >= 1000 ? (count/1000).toFixed(1)+'K' : count;
+        if (count >= target) clearInterval(interval);
+      }, 25);
+    });
+
+    // Blink cursor
+    setInterval(() => {
+      const c = document.querySelector('.cursor');
+      if (c) c.style.opacity = c.style.opacity === '0' ? '1' : '0';
+    }, 500);
+  </script>
+</body>
+</html>

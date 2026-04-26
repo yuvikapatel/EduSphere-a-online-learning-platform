@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .res-wrapper { max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; }
+    .res-tabs { display: flex; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; }
+    .res-tab { padding: 10px 22px; border-radius: 100px; border: 1.5px solid var(--border2); background: transparent; color: var(--text2); font-size: 0.9rem; font-weight: 600; transition: all 0.2s; cursor: pointer; }
+    .res-tab:hover { border-color: var(--accent); color: var(--accent); }
+    .res-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .res-panel { display: none; }
+    .res-panel.active { display: block; }
+    .ref-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .ref-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .ref-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .ref-tag { padding: 3px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
+    .tag-h { background:rgba(255,100,50,0.15);color:#ff6432; }
+    .tag-c { background:rgba(38,170,225,0.15);color:#26aae1; }
+    .tag-j { background:rgba(245,200,66,0.15);color:var(--yellow); }
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .ref-table th { text-align: left; padding: 8px 10px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); border-bottom: 1px solid var(--border); }
+    .ref-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    .ref-table tr:last-child td { border-bottom: none; }
+    .ref-table code { font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg3); padding: 2px 6px; border-radius: 4px; color: #c3e88d; }
+    .ref-table td:first-child { color: var(--accent); font-family: var(--font-mono); font-size: 0.82rem; min-width: 140px; }
+    .cheat-block { background: var(--bg3); border-radius: 10px; padding: 16px; margin-bottom: 14px; border-left: 3px solid var(--accent); }
+    .cheat-block h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; color: var(--text2); }
+    .cheat-block pre { font-family: var(--font-mono); font-size: 0.8rem; color: #c3e88d; overflow-x: auto; line-height: 1.6; white-space: pre-wrap; }
+    @media (max-width: 768px) { .ref-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="page-hero">
+    <div class="page-tag">Reference Library</div>
+    <h1>Developer <em>Resources</em></h1>
+    <p>Cheat sheets, quick references, and deep-dive guides for HTML, CSS, and JavaScript</p>
+  </div>
+
+  <div class="res-wrapper">
+    <div class="res-tabs">
+      <button class="res-tab active" onclick="switchRes('html', this)">🔶 HTML Reference</button>
+      <button class="res-tab" onclick="switchRes('css', this)">🔷 CSS Reference</button>
+      <button class="res-tab" onclick="switchRes('js', this)">⚡ JavaScript Reference</button>
+      <button class="res-tab" onclick="switchRes('cheat', this)">📋 Cheat Sheets</button>
+    </div>
+
+    <!-- HTML -->
+    <div class="res-panel active" id="res-html">
+      <div class="ref-grid">
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-h">HTML5</span> Document Structure</h3>
+          <table class="ref-table"><thead><tr><th>Element</th><th>Description</th></tr></thead><tbody>
+            <tr><td>&lt;!DOCTYPE html&gt;</td><td>Declares HTML5 document type</td></tr>
+            <tr><td>&lt;html lang="en"&gt;</td><td>Root element with language attribute</td></tr>
+            <tr><td>&lt;head&gt;</td><td>Metadata container (not displayed)</td></tr>
+            <tr><td>&lt;meta charset="UTF-8"&gt;</td><td>Character encoding declaration</td></tr>
+            <tr><td>&lt;meta name="viewport"&gt;</td><td>Viewport settings for responsive design</td></tr>
+            <tr><td>&lt;title&gt;</td><td>Browser tab / SEO title</td></tr>
+            <tr><td>&lt;link rel="stylesheet"&gt;</td><td>Links external CSS file</td></tr>
+            <tr><td>&lt;body&gt;</td><td>Visible page content</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-h">HTML5</span> Semantic Elements</h3>
+          <table class="ref-table"><thead><tr><th>Element</th><th>Description</th></tr></thead><tbody>
+            <tr><td>&lt;header&gt;</td><td>Introductory content, logo, nav</td></tr>
+            <tr><td>&lt;nav&gt;</td><td>Navigation links</td></tr>
+            <tr><td>&lt;main&gt;</td><td>Primary content (one per page)</td></tr>
+            <tr><td>&lt;section&gt;</td><td>Thematic grouping with heading</td></tr>
+            <tr><td>&lt;article&gt;</td><td>Self-contained, reusable content</td></tr>
+            <tr><td>&lt;aside&gt;</td><td>Secondary content / sidebar</td></tr>
+            <tr><td>&lt;footer&gt;</td><td>Footer info, links, copyright</td></tr>
+            <tr><td>&lt;figure&gt;</td><td>Media with optional caption</td></tr>
+            <tr><td>&lt;time&gt;</td><td>Date/time (machine-readable)</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-h">HTML5</span> Text & Inline Elements</h3>
+          <table class="ref-table"><thead><tr><th>Element</th><th>Description</th></tr></thead><tbody>
+            <tr><td>&lt;h1&gt; – &lt;h6&gt;</td><td>Headings (h1 = most important)</td></tr>
+            <tr><td>&lt;p&gt;</td><td>Paragraph</td></tr>
+            <tr><td>&lt;strong&gt;</td><td>Bold (semantic importance)</td></tr>
+            <tr><td>&lt;em&gt;</td><td>Italic (emphasis)</td></tr>
+            <tr><td>&lt;a href=""&gt;</td><td>Hyperlink</td></tr>
+            <tr><td>&lt;span&gt;</td><td>Inline container (no meaning)</td></tr>
+            <tr><td>&lt;br&gt;</td><td>Line break</td></tr>
+            <tr><td>&lt;abbr&gt;</td><td>Abbreviation with title</td></tr>
+            <tr><td>&lt;code&gt;</td><td>Inline code</td></tr>
+            <tr><td>&lt;pre&gt;</td><td>Preformatted text block</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-h">HTML5</span> Form Elements</h3>
+          <table class="ref-table"><thead><tr><th>Element / Attr</th><th>Description</th></tr></thead><tbody>
+            <tr><td>&lt;form action method&gt;</td><td>Form container</td></tr>
+            <tr><td>&lt;input type="text"&gt;</td><td>Single-line text input</td></tr>
+            <tr><td>&lt;input type="email"&gt;</td><td>Email with validation</td></tr>
+            <tr><td>&lt;input type="password"&gt;</td><td>Password (masked)</td></tr>
+            <tr><td>&lt;input type="checkbox"&gt;</td><td>Checkbox</td></tr>
+            <tr><td>&lt;input type="radio"&gt;</td><td>Radio button</td></tr>
+            <tr><td>&lt;select&gt;&lt;option&gt;</td><td>Dropdown list</td></tr>
+            <tr><td>&lt;textarea&gt;</td><td>Multi-line text</td></tr>
+            <tr><td>&lt;label for=""&gt;</td><td>Accessible field label</td></tr>
+            <tr><td>required, minlength</td><td>HTML5 validation attributes</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-h">HTML5</span> Media Elements</h3>
+          <table class="ref-table"><thead><tr><th>Element</th><th>Description</th></tr></thead><tbody>
+            <tr><td>&lt;img src alt&gt;</td><td>Image (alt required for a11y)</td></tr>
+            <tr><td>&lt;video controls&gt;</td><td>Video player</td></tr>
+            <tr><td>&lt;audio controls&gt;</td><td>Audio player</td></tr>
+            <tr><td>&lt;source src type&gt;</td><td>Media source for video/audio</td></tr>
+            <tr><td>&lt;iframe&gt;</td><td>Embedded external page</td></tr>
+            <tr><td>&lt;canvas&gt;</td><td>2D/3D graphics canvas</td></tr>
+            <tr><td>&lt;svg&gt;</td><td>Scalable vector graphics</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-h">HTML5</span> Lists & Tables</h3>
+          <table class="ref-table"><thead><tr><th>Element</th><th>Description</th></tr></thead><tbody>
+            <tr><td>&lt;ul&gt;</td><td>Unordered list (bullets)</td></tr>
+            <tr><td>&lt;ol&gt;</td><td>Ordered list (numbers)</td></tr>
+            <tr><td>&lt;li&gt;</td><td>List item</td></tr>
+            <tr><td>&lt;dl dt dd&gt;</td><td>Description list</td></tr>
+            <tr><td>&lt;table&gt;</td><td>Table container</td></tr>
+            <tr><td>&lt;thead tbody tfoot&gt;</td><td>Table sections</td></tr>
+            <tr><td>&lt;tr&gt;</td><td>Table row</td></tr>
+            <tr><td>&lt;th&gt;</td><td>Header cell</td></tr>
+            <tr><td>&lt;td&gt;</td><td>Data cell</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS -->
+    <div class="res-panel" id="res-css">
+      <div class="ref-grid">
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-c">CSS3</span> Selectors</h3>
+          <table class="ref-table"><thead><tr><th>Selector</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>*</code></td><td>Universal — all elements</td></tr>
+            <tr><td><code>div</code></td><td>Type/element selector</td></tr>
+            <tr><td><code>.class</code></td><td>Class selector</td></tr>
+            <tr><td><code>#id</code></td><td>ID selector (unique)</td></tr>
+            <tr><td><code>a, b</code></td><td>Grouping — a OR b</td></tr>
+            <tr><td><code>a b</code></td><td>Descendant — b inside a</td></tr>
+            <tr><td><code>a &gt; b</code></td><td>Direct child — b direct child of a</td></tr>
+            <tr><td><code>a + b</code></td><td>Adjacent sibling</td></tr>
+            <tr><td><code>a ~ b</code></td><td>General sibling</td></tr>
+            <tr><td><code>[attr=val]</code></td><td>Attribute selector</td></tr>
+            <tr><td><code>:hover</code></td><td>Mouse hover state</td></tr>
+            <tr><td><code>:focus</code></td><td>Keyboard focus state</td></tr>
+            <tr><td><code>:nth-child(n)</code></td><td>Nth child element</td></tr>
+            <tr><td><code>::before</code></td><td>Generated before pseudo-element</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-c">CSS3</span> Box Model Properties</h3>
+          <table class="ref-table"><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>width / height</code></td><td>Content dimensions</td></tr>
+            <tr><td><code>max-width</code></td><td>Maximum width constraint</td></tr>
+            <tr><td><code>padding</code></td><td>Inner spacing (all sides)</td></tr>
+            <tr><td><code>padding-top</code></td><td>Top inner spacing</td></tr>
+            <tr><td><code>margin</code></td><td>Outer spacing</td></tr>
+            <tr><td><code>margin: 0 auto</code></td><td>Horizontally centers block</td></tr>
+            <tr><td><code>border</code></td><td>width style color shorthand</td></tr>
+            <tr><td><code>border-radius</code></td><td>Rounded corners</td></tr>
+            <tr><td><code>box-sizing: border-box</code></td><td>Includes padding in width</td></tr>
+            <tr><td><code>overflow</code></td><td>hidden / scroll / auto / visible</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-c">CSS3</span> Flexbox</h3>
+          <table class="ref-table"><thead><tr><th>Property</th><th>Values</th></tr></thead><tbody>
+            <tr><td><code>display: flex</code></td><td>Enable flexbox on container</td></tr>
+            <tr><td><code>flex-direction</code></td><td>row | column | row-reverse</td></tr>
+            <tr><td><code>justify-content</code></td><td>flex-start | center | space-between | space-around | space-evenly</td></tr>
+            <tr><td><code>align-items</code></td><td>stretch | center | flex-start | flex-end | baseline</td></tr>
+            <tr><td><code>flex-wrap</code></td><td>nowrap | wrap | wrap-reverse</td></tr>
+            <tr><td><code>gap</code></td><td>Space between flex items</td></tr>
+            <tr><td><code>flex: 1</code></td><td>Grow to fill available space</td></tr>
+            <tr><td><code>align-self</code></td><td>Override align-items per item</td></tr>
+            <tr><td><code>order</code></td><td>Change visual order of items</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-c">CSS3</span> Grid</h3>
+          <table class="ref-table"><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>display: grid</code></td><td>Enable CSS Grid</td></tr>
+            <tr><td><code>grid-template-columns</code></td><td>Define column sizes: 1fr 2fr 1fr</td></tr>
+            <tr><td><code>grid-template-rows</code></td><td>Define row sizes</td></tr>
+            <tr><td><code>gap / column-gap / row-gap</code></td><td>Space between grid cells</td></tr>
+            <tr><td><code>grid-column: span 2</code></td><td>Item spans 2 columns</td></tr>
+            <tr><td><code>grid-area</code></td><td>Named placement</td></tr>
+            <tr><td><code>repeat(3, 1fr)</code></td><td>3 equal columns</td></tr>
+            <tr><td><code>auto-fit + minmax</code></td><td>Responsive columns auto</td></tr>
+            <tr><td><code>place-items: center</code></td><td>Center items (align + justify)</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-c">CSS3</span> Typography</h3>
+          <table class="ref-table"><thead><tr><th>Property</th><th>Values / Description</th></tr></thead><tbody>
+            <tr><td><code>font-family</code></td><td>'Inter', sans-serif</td></tr>
+            <tr><td><code>font-size</code></td><td>16px / 1rem / 1.2em</td></tr>
+            <tr><td><code>font-weight</code></td><td>100–900 or bold/normal</td></tr>
+            <tr><td><code>font-style</code></td><td>normal | italic | oblique</td></tr>
+            <tr><td><code>line-height</code></td><td>1.5 (unitless preferred)</td></tr>
+            <tr><td><code>letter-spacing</code></td><td>Tracking between characters</td></tr>
+            <tr><td><code>text-align</code></td><td>left | center | right | justify</td></tr>
+            <tr><td><code>text-decoration</code></td><td>none | underline | line-through</td></tr>
+            <tr><td><code>text-transform</code></td><td>uppercase | lowercase | capitalize</td></tr>
+            <tr><td><code>clamp(min, ideal, max)</code></td><td>Fluid responsive font size</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-c">CSS3</span> Positioning & Display</h3>
+          <table class="ref-table"><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>position: static</code></td><td>Default — normal flow</td></tr>
+            <tr><td><code>position: relative</code></td><td>Offset from normal position</td></tr>
+            <tr><td><code>position: absolute</code></td><td>Relative to nearest positioned ancestor</td></tr>
+            <tr><td><code>position: fixed</code></td><td>Relative to viewport, stays on scroll</td></tr>
+            <tr><td><code>position: sticky</code></td><td>Sticks at threshold while scrolling</td></tr>
+            <tr><td><code>z-index</code></td><td>Stack order (higher = on top)</td></tr>
+            <tr><td><code>display: none</code></td><td>Hides element completely</td></tr>
+            <tr><td><code>visibility: hidden</code></td><td>Hides but keeps space</td></tr>
+            <tr><td><code>opacity: 0</code></td><td>Transparent but interactive</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <div class="res-panel" id="res-js">
+      <div class="ref-grid">
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-j">JS</span> Array Methods</h3>
+          <table class="ref-table"><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>arr.map(fn)</code></td><td>Transform each element → new array</td></tr>
+            <tr><td><code>arr.filter(fn)</code></td><td>Keep elements where fn returns true</td></tr>
+            <tr><td><code>arr.reduce(fn, init)</code></td><td>Accumulate into single value</td></tr>
+            <tr><td><code>arr.find(fn)</code></td><td>First element where fn is true</td></tr>
+            <tr><td><code>arr.findIndex(fn)</code></td><td>Index of first match</td></tr>
+            <tr><td><code>arr.some(fn)</code></td><td>True if any element matches</td></tr>
+            <tr><td><code>arr.every(fn)</code></td><td>True if all elements match</td></tr>
+            <tr><td><code>arr.includes(val)</code></td><td>True if value exists</td></tr>
+            <tr><td><code>arr.flat(depth)</code></td><td>Flatten nested arrays</td></tr>
+            <tr><td><code>arr.flatMap(fn)</code></td><td>Map then flatten</td></tr>
+            <tr><td><code>arr.sort(fn)</code></td><td>Sort in-place (mutates!)</td></tr>
+            <tr><td><code>arr.slice(s,e)</code></td><td>Extract portion (non-mutating)</td></tr>
+            <tr><td><code>arr.splice(i,n)</code></td><td>Remove/insert at index (mutates)</td></tr>
+            <tr><td><code>[...a, ...b]</code></td><td>Merge arrays with spread</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-j">JS</span> Object Methods</h3>
+          <table class="ref-table"><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>Object.keys(obj)</code></td><td>Array of property names</td></tr>
+            <tr><td><code>Object.values(obj)</code></td><td>Array of property values</td></tr>
+            <tr><td><code>Object.entries(obj)</code></td><td>Array of [key, value] pairs</td></tr>
+            <tr><td><code>Object.assign(target, src)</code></td><td>Shallow merge / copy</td></tr>
+            <tr><td><code>{ ...obj }</code></td><td>Spread copy of object</td></tr>
+            <tr><td><code>Object.freeze(obj)</code></td><td>Prevent modifications</td></tr>
+            <tr><td><code>Object.create(proto)</code></td><td>Create with prototype</td></tr>
+            <tr><td><code>Object.fromEntries(arr)</code></td><td>Convert entries back to object</td></tr>
+            <tr><td><code>hasOwnProperty(key)</code></td><td>Check if own property</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-j">JS</span> String Methods</h3>
+          <table class="ref-table"><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>str.length</code></td><td>Number of characters</td></tr>
+            <tr><td><code>str.toUpperCase()</code></td><td>Convert to uppercase</td></tr>
+            <tr><td><code>str.toLowerCase()</code></td><td>Convert to lowercase</td></tr>
+            <tr><td><code>str.trim()</code></td><td>Remove leading/trailing whitespace</td></tr>
+            <tr><td><code>str.split(sep)</code></td><td>Split into array</td></tr>
+            <tr><td><code>str.join(sep)</code></td><td>Join array to string</td></tr>
+            <tr><td><code>str.includes(sub)</code></td><td>Check if substring exists</td></tr>
+            <tr><td><code>str.startsWith(s)</code></td><td>Starts with s?</td></tr>
+            <tr><td><code>str.replace(a, b)</code></td><td>Replace first occurrence</td></tr>
+            <tr><td><code>str.replaceAll(a, b)</code></td><td>Replace all occurrences</td></tr>
+            <tr><td><code>str.slice(s, e)</code></td><td>Extract substring</td></tr>
+            <tr><td><code>str.padStart(n, ch)</code></td><td>Pad to length from start</td></tr>
+            <tr><td><code>`${expr}`</code></td><td>Template literal interpolation</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-j">JS</span> DOM Methods</h3>
+          <table class="ref-table"><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>document.querySelector(sel)</code></td><td>First matching element</td></tr>
+            <tr><td><code>document.querySelectorAll(sel)</code></td><td>All matching elements (NodeList)</td></tr>
+            <tr><td><code>document.getElementById(id)</code></td><td>Element by ID</td></tr>
+            <tr><td><code>el.innerHTML</code></td><td>Get/set HTML content</td></tr>
+            <tr><td><code>el.textContent</code></td><td>Get/set text content (safer)</td></tr>
+            <tr><td><code>el.setAttribute(a, v)</code></td><td>Set attribute</td></tr>
+            <tr><td><code>el.classList.add(c)</code></td><td>Add CSS class</td></tr>
+            <tr><td><code>el.classList.toggle(c)</code></td><td>Toggle CSS class</td></tr>
+            <tr><td><code>el.style.property</code></td><td>Set inline CSS</td></tr>
+            <tr><td><code>el.addEventListener(e, fn)</code></td><td>Attach event listener</td></tr>
+            <tr><td><code>document.createElement(tag)</code></td><td>Create new element</td></tr>
+            <tr><td><code>parent.appendChild(child)</code></td><td>Add child to parent</td></tr>
+            <tr><td><code>el.remove()</code></td><td>Remove element from DOM</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-j">JS</span> Promises & Async</h3>
+          <table class="ref-table"><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>new Promise((res, rej) => {})</code></td><td>Create a promise</td></tr>
+            <tr><td><code>promise.then(fn)</code></td><td>Handle resolved value</td></tr>
+            <tr><td><code>promise.catch(fn)</code></td><td>Handle rejection</td></tr>
+            <tr><td><code>promise.finally(fn)</code></td><td>Always runs</td></tr>
+            <tr><td><code>Promise.all([...]) </code></td><td>Wait for all (fails fast)</td></tr>
+            <tr><td><code>Promise.allSettled([...])</code></td><td>Wait for all (never fails)</td></tr>
+            <tr><td><code>Promise.race([...])</code></td><td>First to settle wins</td></tr>
+            <tr><td><code>async function fn() {}</code></td><td>Returns promise implicitly</td></tr>
+            <tr><td><code>await promise</code></td><td>Pause until promise resolves</td></tr>
+            <tr><td><code>try { await } catch {}</code></td><td>Error handling with async/await</td></tr>
+          </tbody></table>
+        </div>
+        <div class="ref-card">
+          <h3><span class="ref-tag tag-j">JS</span> Useful Built-ins</h3>
+          <table class="ref-table"><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+            <tr><td><code>JSON.stringify(obj)</code></td><td>Object → JSON string</td></tr>
+            <tr><td><code>JSON.parse(str)</code></td><td>JSON string → object</td></tr>
+            <tr><td><code>parseInt(str, 10)</code></td><td>String → integer</td></tr>
+            <tr><td><code>parseFloat(str)</code></td><td>String → float</td></tr>
+            <tr><td><code>isNaN(val)</code></td><td>Check if NaN</td></tr>
+            <tr><td><code>Number.isFinite(n)</code></td><td>Check if finite number</td></tr>
+            <tr><td><code>Math.floor/ceil/round(n)</code></td><td>Rounding methods</td></tr>
+            <tr><td><code>Math.max/min(...arr)</code></td><td>Largest / smallest</td></tr>
+            <tr><td><code>Math.random()</code></td><td>Random 0–1</td></tr>
+            <tr><td><code>setTimeout(fn, ms)</code></td><td>Delay execution</td></tr>
+            <tr><td><code>setInterval(fn, ms)</code></td><td>Repeat execution</td></tr>
+            <tr><td><code>clearTimeout/clearInterval</code></td><td>Cancel timers</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cheat Sheets -->
+    <div class="res-panel" id="res-cheat">
+      <div class="ref-grid">
+        <div class="ref-card">
+          <h3>⚡ ES6+ Quick Reference</h3>
+          <div class="cheat-block"><h4>Destructuring</h4><pre>const { a, b = 10 } = obj;
+const [x, , z] = arr;
+const { a: renamed } = obj;</pre></div>
+          <div class="cheat-block"><h4>Arrow Functions</h4><pre>const fn = x => x * 2;
+const add = (a, b) => a + b;
+const greet = name => ({
+  message: `Hello ${name}`
+});</pre></div>
+          <div class="cheat-block"><h4>Spread & Rest</h4><pre>// Spread
+const copy = [...arr];
+const merged = { ...a, ...b };
+
+// Rest
+const [first, ...others] = arr;
+const fn = (a, ...rest) => rest;</pre></div>
+          <div class="cheat-block"><h4>Optional Chaining</h4><pre>const city = user?.address?.city;
+const len = arr?.length ?? 0;
+obj?.method?.();</pre></div>
+        </div>
+        <div class="ref-card">
+          <h3>🎯 CSS Quick Tricks</h3>
+          <div class="cheat-block"><h4>Center Anything (Flexbox)</h4><pre>.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}</pre></div>
+          <div class="cheat-block"><h4>Responsive Grid</h4><pre>.grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}</pre></div>
+          <div class="cheat-block"><h4>CSS Custom Properties</h4><pre>:root {
+  --primary: #4f8ef7;
+  --gap: 16px;
+}
+.btn { background: var(--primary); }
+.card { gap: var(--gap); }</pre></div>
+          <div class="cheat-block"><h4>Smooth Hover</h4><pre>.btn {
+  transition: all 0.2s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}</pre></div>
+        </div>
+        <div class="ref-card">
+          <h3>🚀 Fetch API Patterns</h3>
+          <div class="cheat-block"><h4>GET Request</h4><pre>const res = await fetch('/api/users');
+if (!res.ok) throw new Error(res.status);
+const data = await res.json();</pre></div>
+          <div class="cheat-block"><h4>POST with JSON</h4><pre>const res = await fetch('/api/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name, email })
+});</pre></div>
+          <div class="cheat-block"><h4>Error Handling</h4><pre>try {
+  const data = await fetchUser(id);
+  render(data);
+} catch (err) {
+  console.error('Failed:', err.message);
+} finally {
+  setLoading(false);
+}</pre></div>
+        </div>
+        <div class="ref-card">
+          <h3>🔷 TypeScript Cheatsheet</h3>
+          <div class="cheat-block"><h4>Common Types</h4><pre>let name: string = "Alice";
+let age: number = 30;
+let active: boolean = true;
+let data: unknown = fetchData();
+let id: string | number;  // union</pre></div>
+          <div class="cheat-block"><h4>Interface vs Type</h4><pre>interface User {
+  name: string;
+  email?: string;  // optional
+}
+// extends
+interface Admin extends User {
+  role: 'admin';
+}</pre></div>
+          <div class="cheat-block"><h4>Generics</h4><pre>function identity<T>(val: T): T {
+  return val;
+}
+const first = <T>(arr: T[]): T => arr[0];
+
+type ApiResponse<T> = {
+  data: T;
+  status: number;
+};</pre></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+    function switchRes(id, btn) {
+      document.querySelectorAll('.res-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.res-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('res-' + id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

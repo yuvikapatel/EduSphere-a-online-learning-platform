@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enroll — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .enroll-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; padding: 120px 24px 80px; max-width: 1100px; margin: 0 auto; }
+    .enroll-left h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 16px; }
+    .enroll-left h1 em { font-style: italic; color: var(--accent); }
+    .enroll-left p { color: var(--text2); font-size: 1rem; line-height: 1.7; margin-bottom: 32px; }
+    .perks { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+    .perk { display: flex; align-items: flex-start; gap: 14px; }
+    .perk-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; background: rgba(79,142,247,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .perk-text h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; }
+    .perk-text p { font-size: 0.85rem; color: var(--text2); }
+    .testimonial { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+    .testimonial p { font-size: 0.92rem; color: var(--text2); font-style: italic; margin-bottom: 12px; line-height: 1.7; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.85rem; }
+    .testi-name { font-size: 0.88rem; font-weight: 600; }
+    .testi-role { font-size: 0.78rem; color: var(--text3); }
+    .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 24px; padding: 40px; }
+    .form-card h2 { font-size: 1.6rem; margin-bottom: 6px; }
+    .form-card .subtitle { color: var(--text2); font-size: 0.92rem; margin-bottom: 28px; }
+    .section-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin: 22px 0 12px; border-top: 1px solid var(--border); padding-top: 18px; }
+    .goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .goal-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+    .goal-item:hover { border-color: var(--accent); }
+    .goal-item.selected { border-color: var(--accent); background: rgba(79,142,247,0.08); }
+    .goal-item input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
+    .goal-item span { font-size: 0.88rem; color: var(--text); font-weight: 500; }
+    .terms-row { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0; }
+    .terms-row input { accent-color: var(--accent); margin-top: 3px; }
+    .terms-row label { font-size: 0.85rem; color: var(--text2); }
+    .terms-row a { color: var(--accent); }
+    .pdf-note { background: rgba(34,194,122,0.08); border: 1px solid rgba(34,194,122,0.2); border-radius: 10px; padding: 12px 16px; font-size: 0.84rem; color: var(--green); margin-top: 12px; display: flex; align-items: center; gap: 8px; }
+    @media (max-width: 860px) { .enroll-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="enroll-layout">
+    <div class="enroll-left">
+      <div class="page-tag">Get Started Free</div>
+      <h1>Start Your <em>Dev Journey</em> Today</h1>
+      <p>Join thousands of learners mastering HTML, CSS, JavaScript, and TypeScript through our structured, project-driven curriculum.</p>
+      <div class="perks">
+        <div class="perk"><div class="perk-icon">🎓</div><div class="perk-text"><h4>Structured Curriculum</h4><p>6 units from beginner to advanced, all free to start.</p></div></div>
+        <div class="perk"><div class="perk-icon">🎥</div><div class="perk-text"><h4>Live Sessions</h4><p>Real-time classroom with instructor and peers.</p></div></div>
+        <div class="perk"><div class="perk-icon">📄</div><div class="perk-text"><h4>PDF Enrollment Card</h4><p>Receive a personalized PDF with your learning goals.</p></div></div>
+        <div class="perk"><div class="perk-icon">🏆</div><div class="perk-text"><h4>Certificates</h4><p>Earn completion certificates for each unit.</p></div></div>
+      </div>
+      <div class="testimonial">
+        <p>"EduSphere completely changed how I learn. The live sessions and structured path helped me land my first dev job in 4 months."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div><div class="testi-name">Ananya Sharma</div><div class="testi-role">Frontend Developer @ TechCorp</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h2>Create Your Account</h2>
+      <p class="subtitle">Fill in your details to get started — it's completely free.</p>
+
+      <form id="enrollForm" novalidate>
+        <div class="section-label">Personal Information</div>
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" id="firstName" placeholder="Rahul" required /></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" id="lastName" placeholder="Verma" required /></div>
+        </div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="email" placeholder="rahul@example.com" required /></div>
+        <div class="form-group"><label>Password *</label><input type="password" id="password" placeholder="Min. 6 characters" required minlength="6" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Phone (optional)</label><input type="tel" id="phone" placeholder="+91 98765 43210" /></div>
+          <div class="form-group"><label>Country</label>
+            <select id="country">
+              <option value="">Select country</option>
+              <option value="India" selected>India</option>
+              <option value="USA">United States</option>
+              <option value="UK">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-label">Experience Level</div>
+        <div class="form-group">
+          <select id="level" required>
+            <option value="">Select your level</option>
+            <option value="Complete Beginner">Complete Beginner — No prior experience</option>
+            <option value="Some HTML/CSS">Some HTML/CSS — Can build basic pages</option>
+            <option value="Junior Dev">Junior Dev — Know basics of JS</option>
+            <option value="Intermediate">Intermediate — Working on projects</option>
+          </select>
+        </div>
+
+        <div class="section-label">Learning Goals (select all that apply)</div>
+        <div class="goal-grid">
+          <label class="goal-item" onclick="toggleGoal(this)">
+            <input type="checkbox" value="HTML & CSS Mastery" />
+            <span>🎨 HTML & CSS Mastery</span>
+          </label>
+          <label class="goal-item" onclick="toggleGoal(this)">
+            <input type="checkbox" value="JavaScript & Async" />
+            <span>⚡ JavaScript & Async</span>
+          </label>
+          <label class="goal-item" onclick="toggleGoal(this)">
+            <input type="checkbox" value="TypeScript" />
+            <span>🔷 TypeScript</span>
+          </label>
+          <label class="goal-item" onclick="toggleGoal(this)">
+            <input type="checkbox" value="Full-Stack Development" />
+            <span>🚀 Full-Stack Dev</span>
+          </label>
+          <label class="goal-item" onclick="toggleGoal(this)">
+            <input type="checkbox" value="Node.js & Backend" />
+            <span>🟢 Node.js & Backend</span>
+          </label>
+          <label class="goal-item" onclick="toggleGoal(this)">
+            <input type="checkbox" value="Get a Dev Job" />
+            <span>💼 Get a Dev Job</span>
+          </label>
+        </div>
+
+        <div class="terms-row">
+          <input type="checkbox" id="terms" required />
+          <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <span>Create Account & Generate PDF</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+
+        <div class="pdf-note">📄 Your enrollment details & learning goals will be saved as a PDF automatically.</div>
+        <div class="success-msg" id="successMsg">✓ Account created! Welcome to EduSphere. Check your downloads for your enrollment PDF.</div>
+      </form>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+
+    function toggleGoal(label) {
+      setTimeout(() => {
+        const cb = label.querySelector('input[type=checkbox]');
+        label.classList.toggle('selected', cb.checked);
+      }, 10);
+    }
+
+    document.getElementById('enrollForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const phone = document.getElementById('phone').value.trim();
+      const country = document.getElementById('country').value;
+      const level = document.getElementById('level').value;
+      const terms = document.getElementById('terms').checked;
+
+      if (!firstName || !lastName || !email || !password || !level) {
+        showToast('error', 'Please fill in all required fields.'); return;
+      }
+      if (!terms) {
+        showToast('error', 'Please accept the Terms of Service.'); return;
+      }
+
+      const goals = Array.from(document.querySelectorAll('.goal-item input:checked')).map(cb => cb.value);
+      if (goals.length === 0) {
+        showToast('error', 'Please select at least one learning goal.'); return;
+      }
+
+      const userData = { firstName, lastName, email, password, phone, country, level, goals, id: Date.now(), enrolled: new Date().toISOString() };
+
+      // Save to localStorage (backend proxy)
+      const users = JSON.parse(localStorage.getItem('edusphere_users') || '[]');
+      if (users.find(u => u.email === email)) {
+        showToast('error', 'This email is already registered. Please sign in.'); return;
+      }
+      users.push(userData);
+      localStorage.setItem('edusphere_users', JSON.stringify(users));
+      localStorage.setItem('edusphere_current', JSON.stringify(userData));
+
+      // Send to server
+      try {
+        await fetch('/api/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        });
+      } catch {}
+
+      // Generate PDF
+      generateUserPDF(userData);
+
+      document.getElementById('successMsg').classList.add('show');
+      showToast('success', `🎉 Welcome, ${firstName}! Account created.`);
+      this.reset();
+      document.querySelectorAll('.goal-item').forEach(g => g.classList.remove('selected'));
+    });
+  </script>
+</body>
+</html>

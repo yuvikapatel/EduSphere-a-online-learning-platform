@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Classroom — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .classroom-wrapper { padding: 90px 24px 60px; max-width: 1300px; margin: 0 auto; }
+    .classroom-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .session-info { display: flex; align-items: center; gap: 14px; }
+    .live-badge { display: flex; align-items: center; gap: 7px; background: rgba(242,87,87,0.15); border: 1px solid rgba(242,87,87,0.3); border-radius: 100px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; color: var(--red); }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; }
+    .session-title { font-size: 1.1rem; font-weight: 600; }
+    .session-meta { font-size: 0.84rem; color: var(--text2); }
+    .students-count { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; color: var(--text2); }
+
+    .classroom-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+
+    /* Main Video */
+    .video-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+    .video-main { position: relative; background: #000; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
+    #mainVideo { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .video-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+    .video-placeholder .cam-icon { font-size: 4rem; opacity: 0.3; }
+    .video-placeholder p { color: var(--text3); font-size: 0.9rem; }
+    .video-overlay { position: absolute; bottom: 16px; left: 16px; right: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .user-label { background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 6px 12px; border-radius: 8px; font-size: 0.83rem; font-weight: 500; }
+    .video-controls { display: flex; align-items: center; gap: 10px; padding: 18px 20px; background: var(--bg3); border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .ctrl-btn { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: var(--bg2); border: 1px solid var(--border2); color: var(--text); transition: all 0.2s; }
+    .ctrl-btn:hover { background: var(--bg); border-color: var(--accent); }
+    .ctrl-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .ctrl-btn.danger { background: rgba(242,87,87,0.15); border-color: rgba(242,87,87,0.4); color: var(--red); }
+    .ctrl-btn.danger:hover { background: var(--red); color: #fff; }
+    .ctrl-btn.large { width: auto; padding: 0 20px; border-radius: 22px; font-size: 0.9rem; font-weight: 600; }
+    .ctrl-separator { width: 1px; height: 28px; background: var(--border); margin: 0 4px; }
+    .ctrl-spacer { flex: 1; }
+
+    /* Participants */
+    .participants-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 20px; border-top: 1px solid var(--border); }
+    .participant { background: var(--bg3); border-radius: 10px; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 1px solid var(--border); overflow: hidden; position: relative; }
+    .participant video { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .participant-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+    .participant-name { font-size: 0.72rem; color: var(--text2); }
+    .participant.speaking { border-color: var(--green); box-shadow: 0 0 0 2px rgba(34,194,122,0.3); }
+
+    /* Side Panel */
+    .side-panel { display: flex; flex-direction: column; gap: 16px; }
+    .panel-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .panel-tabs { display: flex; border-bottom: 1px solid var(--border); }
+    .ptab { flex: 1; padding: 12px 8px; font-size: 0.83rem; font-weight: 600; color: var(--text3); background: transparent; text-align: center; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .ptab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .panel-body { padding: 16px; }
+
+    /* Chat */
+    .chat-messages { height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .chat-msg { display: flex; gap: 10px; }
+    .chat-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+    .chat-bubble { flex: 1; }
+    .chat-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 2px; }
+    .chat-text { font-size: 0.85rem; color: var(--text2); background: var(--bg3); padding: 8px 12px; border-radius: 10px; border-top-left-radius: 2px; line-height: 1.4; }
+    .chat-input-row { display: flex; gap: 8px; }
+    .chat-input { flex: 1; padding: 9px 12px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 0.87rem; }
+    .chat-send { padding: 9px 14px; background: var(--accent); border-radius: 8px; color: #fff; font-weight: 600; font-size: 0.83rem; }
+
+    /* Questions */
+    .question-list { display: flex; flex-direction: column; gap: 10px; max-height: 280px; overflow-y: auto; }
+    .question-item { background: var(--bg3); border-radius: 10px; padding: 12px; }
+    .question-item p { font-size: 0.85rem; margin-bottom: 6px; }
+    .question-meta { font-size: 0.76rem; color: var(--text3); display: flex; justify-content: space-between; }
+    .ask-form { margin-top: 12px; display: flex; gap: 8px; }
+    .ask-form input { flex: 1; padding: 9px 12px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 0.85rem; }
+    .ask-form button { padding: 9px 14px; background: var(--accent2); border-radius: 8px; color: #fff; font-weight: 600; font-size: 0.83rem; }
+
+    /* Screen share */
+    .screen-section { padding: 16px 20px; border-top: 1px solid var(--border); }
+    .screen-preview { background: var(--bg3); border-radius: 10px; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px dashed var(--border2); }
+    .screen-preview p { font-size: 0.82rem; color: var(--text3); }
+    #screenVideo { width: 100%; height: 100%; object-fit: contain; display: none; border-radius: 10px; }
+
+    @media (max-width: 900px) { .classroom-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="classroom-wrapper">
+    <div class="classroom-header">
+      <div class="session-info">
+        <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+        <div>
+          <div class="session-title" id="sessionTopic">CSS Grid & Flexbox — Hands-On</div>
+          <div class="session-meta">with <strong>Prof. Sharma</strong> · Unit I: HTML & CSS Foundations</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div class="students-count">👥 <span id="studentCount">12</span> online</div>
+        <button class="btn-primary" onclick="location.href='curriculum.html'">📚 Curriculum</button>
+      </div>
+    </div>
+
+    <div class="classroom-grid">
+      <!-- Main Video Area -->
+      <div class="video-section">
+        <div class="video-main" id="videoMain">
+          <video id="mainVideo" autoplay muted playsinline></video>
+          <div class="video-placeholder" id="videoPlaceholder">
+            <div class="cam-icon">🎥</div>
+            <p>Click "Start Camera" to join the session</p>
+            <button class="btn-primary" onclick="startCamera()">Start Camera & Mic</button>
+          </div>
+          <div class="video-overlay" id="videoOverlay" style="display:none;">
+            <div class="user-label" id="userLabel">You</div>
+            <div class="user-label" id="durationLabel">00:00</div>
+          </div>
+        </div>
+
+        <!-- Screen share preview -->
+        <div class="screen-section" id="screenSection" style="display:none;">
+          <div style="font-size:0.82rem;color:var(--text3);margin-bottom:8px;">🖥️ Screen Share</div>
+          <div class="screen-preview" id="screenPreview">
+            <video id="screenVideo" autoplay muted playsinline></video>
+            <p id="screenMsg">No screen shared yet</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="video-controls">
+          <button class="ctrl-btn" id="micBtn" title="Toggle Mic" onclick="toggleMic()">🎙️</button>
+          <button class="ctrl-btn" id="camBtn" title="Toggle Camera" onclick="toggleCamera()">📷</button>
+          <button class="ctrl-btn" id="screenBtn" title="Share Screen" onclick="shareScreen()">🖥️</button>
+          <div class="ctrl-separator"></div>
+          <button class="ctrl-btn large" id="joinBtn" onclick="startCamera()" style="background:var(--green);border-color:var(--green);color:#fff;">Join Session</button>
+          <div class="ctrl-spacer"></div>
+          <button class="ctrl-btn danger large" onclick="leaveSession()">Leave</button>
+        </div>
+
+        <!-- Participants -->
+        <div class="participants-grid" id="participantsGrid">
+          <div class="participant speaking">
+            <div class="participant-avatar" style="background:#4f8ef7">P</div>
+            <div class="participant-name">Prof. Sharma</div>
+          </div>
+          <div class="participant">
+            <div class="participant-avatar" style="background:#22c27a">A</div>
+            <div class="participant-name">Ananya</div>
+          </div>
+          <div class="participant">
+            <div class="participant-avatar" style="background:#f5c842">R</div>
+            <div class="participant-name">Rahul</div>
+          </div>
+          <div class="participant">
+            <div class="participant-avatar" style="background:#f25757">P</div>
+            <div class="participant-name">Priya</div>
+          </div>
+          <div class="participant" id="myParticipant" style="display:none;">
+            <video id="miniVideo" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+            <div class="participant-name" style="position:absolute;bottom:4px;z-index:1;background:rgba(0,0,0,0.6);padding:2px 6px;border-radius:4px;">You</div>
+          </div>
+          <div class="participant">
+            <div class="participant-avatar" style="background:#7c5ff7">K</div>
+            <div class="participant-name">Karan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Panel -->
+      <div class="side-panel">
+        <div class="panel-card">
+          <div class="panel-tabs">
+            <button class="ptab active" onclick="switchTab('chat', this)">💬 Chat</button>
+            <button class="ptab" onclick="switchTab('questions', this)">❓ Q&A</button>
+            <button class="ptab" onclick="switchTab('people', this)">👥 People</button>
+          </div>
+
+          <!-- Chat Tab -->
+          <div class="panel-body" id="tab-chat">
+            <div class="chat-messages" id="chatMessages">
+              <div class="chat-msg">
+                <div class="chat-avatar" style="background:#4f8ef7">P</div>
+                <div class="chat-bubble"><div class="chat-name" style="color:#4f8ef7">Prof. Sharma</div><div class="chat-text">Welcome everyone! Today we'll be doing a hands-on session on CSS Grid. Please share your screens when asked.</div></div>
+              </div>
+              <div class="chat-msg">
+                <div class="chat-avatar" style="background:#22c27a">A</div>
+                <div class="chat-bubble"><div class="chat-name" style="color:#22c27a">Ananya</div><div class="chat-text">Excited! Ready with my code editor 🚀</div></div>
+              </div>
+              <div class="chat-msg">
+                <div class="chat-avatar" style="background:#f5c842">R</div>
+                <div class="chat-bubble"><div class="chat-name" style="color:#f5c842">Rahul</div><div class="chat-text">Quick question — should we have started Unit I already?</div></div>
+              </div>
+              <div class="chat-msg">
+                <div class="chat-avatar" style="background:#4f8ef7">P</div>
+                <div class="chat-bubble"><div class="chat-name" style="color:#4f8ef7">Prof. Sharma</div><div class="chat-text">Yes! Lesson 5 onwards. Check the curriculum page.</div></div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChat()" />
+              <button class="chat-send" onclick="sendChat()">Send</button>
+            </div>
+          </div>
+
+          <!-- Q&A Tab -->
+          <div class="panel-body" id="tab-questions" style="display:none;">
+            <div class="question-list" id="questionList">
+              <div class="question-item">
+                <p>What's the difference between grid-template-columns and grid-auto-columns?</p>
+                <div class="question-meta"><span>Rahul</span><span>5 min ago</span></div>
+              </div>
+              <div class="question-item">
+                <p>Can we use Flexbox inside a Grid cell?</p>
+                <div class="question-meta"><span>Priya</span><span>2 min ago</span></div>
+              </div>
+            </div>
+            <div class="ask-form">
+              <input id="questionInput" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') askQuestion()" />
+              <button onclick="askQuestion()">Ask</button>
+            </div>
+          </div>
+
+          <!-- People Tab -->
+          <div class="panel-body" id="tab-people" style="display:none;">
+            <div id="peopleList" style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg3);border-radius:10px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#4f8ef7;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">P</div>
+                <div><div style="font-size:0.88rem;font-weight:600;">Prof. Sharma</div><div style="font-size:0.76rem;color:var(--green);">● Host</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg3);border-radius:10px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#22c27a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">A</div>
+                <div><div style="font-size:0.88rem;font-weight:600;">Ananya</div><div style="font-size:0.76rem;color:var(--text3);">● Student</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg3);border-radius:10px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#f5c842;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">R</div>
+                <div><div style="font-size:0.88rem;font-weight:600;">Rahul</div><div style="font-size:0.76rem;color:var(--text3);">● Student</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session Info Card -->
+        <div class="panel-card" style="padding:18px;">
+          <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;">Session Info</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.87rem;">
+              <span style="color:var(--text2);">Topic</span><span style="font-weight:600;" id="infoTopic">CSS Grid & Flexbox</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.87rem;">
+              <span style="color:var(--text2);">Instructor</span><span style="font-weight:600;">Prof. Sharma</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.87rem;">
+              <span style="color:var(--text2);">Duration</span><span style="font-weight:600;" id="infoDuration">42 min</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.87rem;">
+              <span style="color:var(--text2);">Students</span><span style="font-weight:600;" id="infoStudents">12</span>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+            <a href="quiz.html?unit=1"><button style="width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:0.87rem;font-weight:600;cursor:pointer;">📝 Unit Quiz</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+
+    let localStream = null;
+    let screenStream = null;
+    let micEnabled = false;
+    let camEnabled = false;
+    let sessionTimer = null;
+    let sessionSeconds = 0;
+
+    const chatColors = ['#4f8ef7','#22c27a','#f5c842','#f25757','#7c5ff7','#f58c42'];
+    const names = ['Alex','Jamie','Sam','Chris','Taylor','Morgan'];
+
+    // Session status from API
+    async function loadSessionStatus() {
+      try {
+        const res = await fetch('/api/session/status');
+        const data = await res.json();
+        document.getElementById('sessionTopic').textContent = data.topic;
+        document.getElementById('infoTopic').textContent = data.topic;
+        document.getElementById('studentCount').textContent = data.studentsOnline;
+        document.getElementById('infoStudents').textContent = data.studentsOnline;
+        document.getElementById('infoDuration').textContent = data.duration;
+      } catch {}
+    }
+    loadSessionStatus();
+
+    async function startCamera() {
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const video = document.getElementById('mainVideo');
+        const miniVideo = document.getElementById('miniVideo');
+        video.srcObject = localStream;
+        miniVideo.srcObject = localStream;
+        video.style.display = 'block';
+        document.getElementById('videoPlaceholder').style.display = 'none';
+        document.getElementById('videoOverlay').style.display = 'flex';
+        document.getElementById('myParticipant').style.display = 'block';
+        document.getElementById('joinBtn').textContent = '✓ Joined';
+        document.getElementById('joinBtn').style.background = 'var(--green)';
+
+        const user = JSON.parse(localStorage.getItem('edusphere_current') || '{}');
+        document.getElementById('userLabel').textContent = user.firstName ? `${user.firstName} (You)` : 'You';
+
+        micEnabled = true;
+        camEnabled = true;
+        document.getElementById('micBtn').classList.add('active');
+        document.getElementById('camBtn').classList.add('active');
+
+        startTimer();
+        showToast('success', '🎥 Camera & mic enabled!');
+
+        // Simulate participants joining
+        simulateActivity();
+      } catch (err) {
+        if (err.name === 'NotAllowedError') {
+          showToast('error', '❌ Camera/mic permission denied. Please allow access.');
+        } else {
+          showToast('error', '❌ Could not access camera: ' + err.message);
+        }
+      }
+    }
+
+    function toggleMic() {
+      if (!localStream) { showToast('error', 'Join the session first.'); return; }
+      micEnabled = !micEnabled;
+      localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+      document.getElementById('micBtn').classList.toggle('active', micEnabled);
+      document.getElementById('micBtn').textContent = micEnabled ? '🎙️' : '🔇';
+      showToast('success', micEnabled ? '🎙️ Mic on' : '🔇 Mic muted');
+    }
+
+    function toggleCamera() {
+      if (!localStream) { showToast('error', 'Join the session first.'); return; }
+      camEnabled = !camEnabled;
+      localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
+      document.getElementById('camBtn').classList.toggle('active', camEnabled);
+      document.getElementById('camBtn').textContent = camEnabled ? '📷' : '📵';
+      document.getElementById('mainVideo').style.opacity = camEnabled ? '1' : '0.3';
+      showToast('success', camEnabled ? '📷 Camera on' : '📵 Camera off');
+    }
+
+    async function shareScreen() {
+      try {
+        screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+        const screenVideo = document.getElementById('screenVideo');
+        screenVideo.srcObject = screenStream;
+        screenVideo.style.display = 'block';
+        document.getElementById('screenMsg').style.display = 'none';
+        document.getElementById('screenSection').style.display = 'block';
+        document.getElementById('screenBtn').classList.add('active');
+        showToast('success', '🖥️ Screen sharing started!');
+
+        screenStream.getVideoTracks()[0].onended = () => {
+          document.getElementById('screenVideo').style.display = 'none';
+          document.getElementById('screenMsg').style.display = 'block';
+          document.getElementById('screenBtn').classList.remove('active');
+          showToast('success', '🖥️ Screen sharing stopped.');
+        };
+      } catch (err) {
+        if (err.name !== 'AbortError') showToast('error', '❌ Screen share cancelled.');
+      }
+    }
+
+    function leaveSession() {
+      if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+      if (screenStream) { screenStream.getTracks().forEach(t => t.stop()); screenStream = null; }
+      document.getElementById('mainVideo').style.display = 'none';
+      document.getElementById('videoPlaceholder').style.display = 'flex';
+      document.getElementById('videoOverlay').style.display = 'none';
+      document.getElementById('myParticipant').style.display = 'none';
+      clearInterval(sessionTimer);
+      showToast('success', '👋 You left the session.');
+    }
+
+    function startTimer() {
+      sessionTimer = setInterval(() => {
+        sessionSeconds++;
+        const m = String(Math.floor(sessionSeconds/60)).padStart(2,'0');
+        const s = String(sessionSeconds%60).padStart(2,'0');
+        document.getElementById('durationLabel').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    // Chat
+    function sendChat() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      const user = JSON.parse(localStorage.getItem('edusphere_current') || '{}');
+      const name = user.firstName || 'You';
+      const msg = document.createElement('div');
+      msg.className = 'chat-msg';
+      msg.innerHTML = `<div class="chat-avatar" style="background:var(--accent)">${name[0]}</div><div class="chat-bubble"><div class="chat-name" style="color:var(--accent)">${name}</div><div class="chat-text">${text}</div></div>`;
+      document.getElementById('chatMessages').appendChild(msg);
+      document.getElementById('chatMessages').scrollTop = 9999;
+      input.value = '';
+    }
+
+    function askQuestion() {
+      const input = document.getElementById('questionInput');
+      const text = input.value.trim();
+      if (!text) return;
+      const user = JSON.parse(localStorage.getItem('edusphere_current') || '{}');
+      const name = user.firstName || 'You';
+      const item = document.createElement('div');
+      item.className = 'question-item';
+      item.innerHTML = `<p>${text}</p><div class="question-meta"><span>${name}</span><span>Just now</span></div>`;
+      document.getElementById('questionList').appendChild(item);
+      input.value = '';
+      showToast('success', '❓ Question posted!');
+    }
+
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      ['chat','questions','people'].forEach(t => {
+        document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+      });
+    }
+
+    function simulateActivity() {
+      const messages = ['Great explanation! 👏','How do I apply this to React?','This is making so much sense now!','Can you slow down a bit please?','Which lesson should I review after this?'];
+      let i = 0;
+      setInterval(() => {
+        const name = names[Math.floor(Math.random()*names.length)];
+        const color = chatColors[Math.floor(Math.random()*chatColors.length)];
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg';
+        msg.innerHTML = `<div class="chat-avatar" style="background:${color}">${name[0]}</div><div class="chat-bubble"><div class="chat-name" style="color:${color}">${name}</div><div class="chat-text">${messages[i++ % messages.length]}</div></div>`;
+        document.getElementById('chatMessages').appendChild(msg);
+        document.getElementById('chatMessages').scrollTop = 9999;
+      }, 8000);
+    }
+  </script>
+</body>
+</html>

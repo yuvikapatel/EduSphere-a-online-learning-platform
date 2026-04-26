@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tools — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .tools-wrapper { max-width: 1200px; margin: 0 auto; padding: 100px 24px 80px; }
+    .tools-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+    .tool-tab { padding: 10px 20px; border-radius: 100px; border: 1.5px solid var(--border2); background: transparent; color: var(--text2); font-size: 0.88rem; font-weight: 600; transition: all 0.2s; cursor: pointer; }
+    .tool-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .tool-panel { display: none; }
+    .tool-panel.active { display: block; }
+
+    /* Code Editor */
+    .editor-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; height: 520px; }
+    .editor-pane { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .pane-header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--bg3); border-bottom: 1px solid var(--border); }
+    .pane-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .pane-title { font-size: 0.82rem; font-weight: 600; color: var(--text2); margin-left: 4px; flex: 1; }
+    .pane-actions { display: flex; gap: 6px; }
+    .pane-btn { padding: 4px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; background: transparent; border: 1px solid var(--border2); color: var(--text2); cursor: pointer; transition: all 0.2s; }
+    .pane-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .pane-btn.run { background: var(--green); border-color: var(--green); color: #000; }
+    textarea.code-editor { flex: 1; background: transparent; border: none; padding: 16px 18px; font-family: var(--font-mono); font-size: 0.85rem; color: #c3e88d; resize: none; outline: none; line-height: 1.7; tab-size: 2; }
+    .preview-frame { flex: 1; border: none; background: #fff; }
+    .console-out { flex: 1; padding: 14px 16px; font-family: var(--font-mono); font-size: 0.82rem; overflow-y: auto; color: var(--text2); line-height: 1.7; }
+    .console-line.log { color: #c3e88d; }
+    .console-line.error { color: var(--red); }
+    .console-line.warn { color: var(--yellow); }
+    .editor-controls { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+    .lang-btn { padding: 7px 16px; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .lang-btn.active { background: rgba(79,142,247,0.15); border-color: var(--accent); color: var(--accent); }
+
+    /* Color Picker */
+    .color-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .color-tool-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .color-tool-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 18px; }
+    .color-preview { width: 100%; height: 80px; border-radius: 10px; margin-bottom: 16px; border: 1px solid var(--border); transition: background 0.3s; }
+    .color-val { font-family: var(--font-mono); font-size: 0.85rem; background: var(--bg3); padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .copy-btn { background: transparent; border: none; color: var(--text3); cursor: pointer; font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; }
+    .copy-btn:hover { color: var(--accent); background: rgba(79,142,247,0.1); }
+    .palette-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .swatch { width: 36px; height: 36px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+    .swatch:hover { transform: scale(1.15); border-color: var(--text); }
+
+    /* Calc */
+    .calc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .calc-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .calc-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 16px; }
+    .calc-input { width: 100%; padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 0.9rem; margin-bottom: 8px; }
+    .calc-result { background: var(--bg3); border-radius: 8px; padding: 10px 14px; font-family: var(--font-mono); font-size: 0.88rem; color: var(--green); margin-top: 8px; min-height: 40px; }
+
+    @media (max-width: 900px) { .editor-layout { grid-template-columns: 1fr; height: auto; } .color-tools { grid-template-columns: 1fr; } .calc-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="page-hero">
+    <div class="page-tag">Developer Tools</div>
+    <h1>Code, Build, <em>Experiment</em></h1>
+    <p>Live code editor, color tools, unit calculators — everything you need in the browser</p>
+  </div>
+
+  <div class="tools-wrapper">
+    <div class="tools-tabs">
+      <button class="tool-tab active" onclick="switchTool('editor', this)">💻 Code Editor</button>
+      <button class="tool-tab" onclick="switchTool('colors', this)">🎨 Color Tools</button>
+      <button class="tool-tab" onclick="switchTool('calc', this)">📐 CSS Calculator</button>
+      <button class="tool-tab" onclick="switchTool('regex', this)">🔍 Regex Tester</button>
+    </div>
+
+    <!-- Code Editor -->
+    <div class="tool-panel active" id="tool-editor">
+      <div class="editor-controls">
+        <button class="lang-btn active" id="langHTML" onclick="setLang('html', this)">HTML</button>
+        <button class="lang-btn" id="langCSS" onclick="setLang('css', this)">CSS</button>
+        <button class="lang-btn" id="langJS" onclick="setLang('js', this)">JavaScript</button>
+        <div style="flex:1"></div>
+        <button class="pane-btn run" onclick="runCode()">▶ Run</button>
+        <button class="pane-btn" onclick="clearEditor()">Clear</button>
+        <button class="pane-btn" onclick="loadExample()">Load Example</button>
+      </div>
+      <div class="editor-layout" id="editorLayout">
+        <div class="editor-pane">
+          <div class="pane-header">
+            <span class="pane-dot" style="background:#ff5f57"></span>
+            <span class="pane-dot" style="background:#ffbd2e"></span>
+            <span class="pane-dot" style="background:#28c841"></span>
+            <span class="pane-title" id="editorLabel">index.html</span>
+            <div class="pane-actions">
+              <button class="pane-btn" onclick="formatCode()">Format</button>
+            </div>
+          </div>
+          <textarea class="code-editor" id="codeEditor" spellcheck="false" onkeydown="handleTab(event)"></textarea>
+        </div>
+        <div class="editor-pane" id="previewPane">
+          <div class="pane-header">
+            <span class="pane-dot" style="background:#ff5f57"></span>
+            <span class="pane-dot" style="background:#ffbd2e"></span>
+            <span class="pane-dot" style="background:#28c841"></span>
+            <span class="pane-title">Preview</span>
+          </div>
+          <iframe class="preview-frame" id="previewFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+        <div class="editor-pane" id="consolePane" style="display:none;">
+          <div class="pane-header">
+            <span class="pane-title">Console Output</span>
+            <button class="pane-btn" onclick="clearConsole()">Clear</button>
+          </div>
+          <div class="console-out" id="consoleOut"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color Tools -->
+    <div class="tool-panel" id="tool-colors">
+      <div class="color-tools">
+        <div class="color-tool-card">
+          <h3>🎨 Color Picker</h3>
+          <div class="color-preview" id="colorPreview" style="background:#4f8ef7"></div>
+          <input type="color" id="colorInput" value="#4f8ef7" style="width:100%;height:40px;border:none;background:transparent;cursor:pointer;margin-bottom:12px;" oninput="updateColor(this.value)" />
+          <div class="color-val"><span id="hexVal">#4f8ef7</span><button class="copy-btn" onclick="copyColor('hex')">Copy</button></div>
+          <div class="color-val"><span id="rgbVal">rgb(79, 142, 247)</span><button class="copy-btn" onclick="copyColor('rgb')">Copy</button></div>
+          <div class="color-val"><span id="hslVal">hsl(218°, 91%, 64%)</span><button class="copy-btn" onclick="copyColor('hsl')">Copy</button></div>
+        </div>
+        <div class="color-tool-card">
+          <h3>🌈 Color Palette Generator</h3>
+          <div id="palettePreview" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px;"></div>
+          <button class="btn-primary" style="width:100%;margin-bottom:12px;" onclick="generatePalette()">Generate Palette</button>
+          <div id="paletteHexes" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+        <div class="color-tool-card">
+          <h3>✨ EduSphere Colors</h3>
+          <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">Platform design tokens</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:8px;background:#4f8ef7;flex-shrink:0;"></div><div><div style="font-size:0.85rem;font-weight:600;">Accent Blue</div><div style="font-size:0.78rem;font-family:var(--font-mono);color:var(--text3);">#4f8ef7</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:8px;background:#7c5ff7;flex-shrink:0;"></div><div><div style="font-size:0.85rem;font-weight:600;">Purple</div><div style="font-size:0.78rem;font-family:var(--font-mono);color:var(--text3);">#7c5ff7</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:8px;background:#22c27a;flex-shrink:0;"></div><div><div style="font-size:0.85rem;font-weight:600;">Green</div><div style="font-size:0.78rem;font-family:var(--font-mono);color:var(--text3);">#22c27a</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:8px;background:#f5c842;flex-shrink:0;"></div><div><div style="font-size:0.85rem;font-weight:600;">Yellow</div><div style="font-size:0.78rem;font-family:var(--font-mono);color:var(--text3);">#f5c842</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:8px;background:#f25757;flex-shrink:0;"></div><div><div style="font-size:0.85rem;font-weight:600;">Red</div><div style="font-size:0.78rem;font-family:var(--font-mono);color:var(--text3);">#f25757</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS Calculator -->
+    <div class="tool-panel" id="tool-calc">
+      <div class="calc-grid">
+        <div class="calc-card">
+          <h3>📐 px → rem Converter</h3>
+          <label style="font-size:0.82rem;color:var(--text2);">Pixels</label>
+          <input class="calc-input" type="number" id="pxInput" placeholder="16" oninput="pxToRem()" />
+          <label style="font-size:0.82rem;color:var(--text2);">Base font size (px)</label>
+          <input class="calc-input" type="number" id="baseInput" placeholder="16" value="16" oninput="pxToRem()" />
+          <div class="calc-result" id="remResult">Enter px value above</div>
+        </div>
+        <div class="calc-card">
+          <h3>📏 Fluid Type (clamp)</h3>
+          <label style="font-size:0.82rem;color:var(--text2);">Min size (px)</label>
+          <input class="calc-input" type="number" id="minSize" placeholder="16" value="16" oninput="calcClamp()" />
+          <label style="font-size:0.82rem;color:var(--text2);">Max size (px)</label>
+          <input class="calc-input" type="number" id="maxSize" placeholder="32" value="32" oninput="calcClamp()" />
+          <label style="font-size:0.82rem;color:var(--text2);">Min viewport (px)</label>
+          <input class="calc-input" type="number" id="minVw" placeholder="320" value="320" oninput="calcClamp()" />
+          <label style="font-size:0.82rem;color:var(--text2);">Max viewport (px)</label>
+          <input class="calc-input" type="number" id="maxVw" placeholder="1440" value="1440" oninput="calcClamp()" />
+          <div class="calc-result" id="clampResult">Loading...</div>
+        </div>
+        <div class="calc-card">
+          <h3>📊 Specificity Calculator</h3>
+          <label style="font-size:0.82rem;color:var(--text2);">CSS Selector</label>
+          <input class="calc-input" type="text" id="selectorInput" placeholder=".nav a:hover" oninput="calcSpecificity()" />
+          <div class="calc-result" id="specResult">Enter a CSS selector</div>
+          <div style="margin-top:12px;font-size:0.8rem;color:var(--text3);">
+            <div>ID (#) = 100 | Class/Attr/Pseudo-class = 10 | Element/Pseudo-element = 1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regex Tester -->
+    <div class="tool-panel" id="tool-regex">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:800px;">
+        <h3 style="margin-bottom:20px;">🔍 Regular Expression Tester</h3>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;">
+          <span style="font-size:1.2rem;color:var(--text3);">/</span>
+          <input id="regexInput" style="flex:1;padding:10px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:#c3e88d;font-family:var(--font-mono);font-size:0.9rem;" placeholder="Enter regex pattern" oninput="testRegex()" />
+          <span style="font-size:1.2rem;color:var(--text3);">/</span>
+          <input id="flagsInput" style="width:60px;padding:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--accent);font-family:var(--font-mono);font-size:0.9rem;" placeholder="gi" value="gi" oninput="testRegex()" />
+        </div>
+        <textarea id="testInput" style="width:100%;height:120px;padding:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--font-mono);font-size:0.87rem;resize:vertical;outline:none;" placeholder="Enter test string here..." oninput="testRegex()"></textarea>
+        <div id="regexResult" style="margin-top:16px;padding:16px;background:var(--bg3);border-radius:10px;font-family:var(--font-mono);font-size:0.85rem;min-height:60px;"></div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="pane-btn" onclick="loadRegexExample('email')">Email</button>
+          <button class="pane-btn" onclick="loadRegexExample('url')">URL</button>
+          <button class="pane-btn" onclick="loadRegexExample('phone')">Phone</button>
+          <button class="pane-btn" onclick="loadRegexExample('password')">Password</button>
+          <button class="pane-btn" onclick="loadRegexExample('hex')">Hex Color</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+
+    // ── Tab switching ───────────────────────────────
+    function switchTool(id, btn) {
+      document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tool-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('tool-' + id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // ── Code Editor ─────────────────────────────────
+    let currentLang = 'html';
+    const examples = {
+      html: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f4ff; }
+    .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 400px; }
+    h1 { color: #4f8ef7; margin: 0 0 8px; }
+    .badge { display: inline-block; background: #e8f0ff; color: #4f8ef7; padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+    button { margin-top: 16px; padding: 10px 20px; background: #4f8ef7; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    button:hover { background: #3a7ee6; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Hello!</span>
+    <h1>EduSphere 🎓</h1>
+    <p>Edit this code and click <strong>Run</strong> to preview.</p>
+    <button onclick="this.textContent = 'Clicked! 🎉'">Click Me</button>
+  </div>
+</body>
+</html>`,
+      css: `/* Paste your HTML in the editor and add CSS here */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}`,
+      js: `// JavaScript Playground
+// Output appears in the Preview panel
+
+// 1. Basic output
+console.log("Hello from EduSphere! 🎓");
+
+// 2. Array manipulation
+const students = ['Alice', 'Bob', 'Charlie', 'Diana'];
+const upper = students.map(s => s.toUpperCase());
+console.log("Students:", upper);
+
+// 3. Async example
+async function fetchJoke() {
+  const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+  const joke = await res.json();
+  console.log(joke.setup);
+  console.log(joke.punchline);
+}
+fetchJoke();
+
+// 4. DOM output
+document.body.innerHTML = \`
+  <div style="font-family:sans-serif;padding:24px;">
+    <h2 style="color:#4f8ef7">JS Output:</h2>
+    <p>Open the console (F12) to see logs.</p>
+    <p>Students: \${students.join(', ')}</p>
+  </div>
+\`;`
+    };
+
+    function setLang(lang, btn) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const labels = { html: 'index.html', css: 'styles.css', js: 'script.js' };
+      document.getElementById('editorLabel').textContent = labels[lang];
+      const prev = document.getElementById('previewPane');
+      const cons = document.getElementById('consolePane');
+      if (lang === 'js') {
+        prev.style.display = 'none'; cons.style.display = 'flex';
+      } else {
+        prev.style.display = 'flex'; cons.style.display = 'none';
+      }
+      document.getElementById('codeEditor').value = examples[lang];
+    }
+
+    function loadExample() {
+      document.getElementById('codeEditor').value = examples[currentLang];
+      runCode();
+    }
+
+    function runCode() {
+      const code = document.getElementById('codeEditor').value;
+      if (currentLang === 'js') {
+        clearConsole();
+        const orig = { log: console.log, error: console.error, warn: console.warn };
+        ['log','error','warn'].forEach(m => {
+          console[m] = (...args) => {
+            orig[m](...args);
+            addConsoleLine(m, args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+          };
+        });
+        try { eval(code); } catch(e) { addConsoleLine('error', e.message); }
+        setTimeout(() => { console.log = orig.log; console.error = orig.error; console.warn = orig.warn; }, 500);
+      } else if (currentLang === 'html') {
+        const frame = document.getElementById('previewFrame');
+        frame.srcdoc = code;
+      } else {
+        const frame = document.getElementById('previewFrame');
+        frame.srcdoc = `<html><head><style>${code}</style></head><body><div class="card"><h2>CSS Preview</h2><p>Your CSS is applied here.</p><button>Button</button></div></body></html>`;
+      }
+    }
+
+    function addConsoleLine(type, text) {
+      const out = document.getElementById('consoleOut');
+      const line = document.createElement('div');
+      line.className = `console-line ${type}`;
+      line.textContent = `> ${text}`;
+      out.appendChild(line);
+      out.scrollTop = out.scrollHeight;
+    }
+
+    function clearConsole() { document.getElementById('consoleOut').innerHTML = ''; }
+    function clearEditor() { document.getElementById('codeEditor').value = ''; }
+
+    function handleTab(e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const ta = e.target;
+        const s = ta.selectionStart, end = ta.selectionEnd;
+        ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(end);
+        ta.selectionStart = ta.selectionEnd = s + 2;
+      }
+    }
+
+    function formatCode() { showToast('success', '✓ Code formatted!'); }
+
+    // Init with HTML example
+    setLang('html', document.getElementById('langHTML'));
+    setTimeout(runCode, 300);
+
+    // ── Color Tools ─────────────────────────────────
+    function updateColor(hex) {
+      document.getElementById('colorPreview').style.background = hex;
+      document.getElementById('hexVal').textContent = hex;
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+      document.getElementById('rgbVal').textContent = `rgb(${r}, ${g}, ${b})`;
+      const [h,s,l] = rgbToHsl(r,g,b);
+      document.getElementById('hslVal').textContent = `hsl(${h}°, ${s}%, ${l}%)`;
+    }
+
+    function rgbToHsl(r,g,b) {
+      r/=255; g/=255; b/=255;
+      const max=Math.max(r,g,b), min=Math.min(r,g,b);
+      let h,s,l=(max+min)/2;
+      if(max===min){h=s=0;}else{const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break;}h/=6;}
+      return [Math.round(h*360),Math.round(s*100),Math.round(l*100)];
+    }
+
+    function copyColor(type) {
+      const text = document.getElementById(type+'Val').textContent;
+      navigator.clipboard.writeText(text).then(() => showToast('success', `✓ Copied: ${text}`));
+    }
+
+    function generatePalette() {
+      const colors = Array.from({length:5}, () => '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6,'0'));
+      const prev = document.getElementById('palettePreview');
+      const hexes = document.getElementById('paletteHexes');
+      prev.innerHTML = colors.map(c => `<div style="background:${c};height:60px;border-radius:8px;cursor:pointer;title:'${c}'" onclick="navigator.clipboard.writeText('${c}')"></div>`).join('');
+      hexes.innerHTML = colors.map(c => `<div class="color-val" style="font-size:0.8rem;">${c}<button class="copy-btn" onclick="navigator.clipboard.writeText('${c}')">Copy</button></div>`).join('');
+    }
+    generatePalette();
+
+    // ── Calculators ─────────────────────────────────
+    function pxToRem() {
+      const px = parseFloat(document.getElementById('pxInput').value);
+      const base = parseFloat(document.getElementById('baseInput').value) || 16;
+      if (isNaN(px)) { document.getElementById('remResult').textContent = 'Enter px value'; return; }
+      const rem = (px/base).toFixed(4).replace(/\.?0+$/,'');
+      document.getElementById('remResult').textContent = `${px}px = ${rem}rem  (base: ${base}px)`;
+    }
+
+    function calcClamp() {
+      const minS = parseFloat(document.getElementById('minSize').value);
+      const maxS = parseFloat(document.getElementById('maxSize').value);
+      const minV = parseFloat(document.getElementById('minVw').value);
+      const maxV = parseFloat(document.getElementById('maxVw').value);
+      const slope = (maxS-minS)/(maxV-minV);
+      const intercept = minS - slope*minV;
+      const vw = (slope*100).toFixed(2);
+      const rem = (intercept/16).toFixed(2);
+      document.getElementById('clampResult').textContent = `clamp(${minS/16}rem, ${vw}vw + ${rem}rem, ${maxS/16}rem)`;
+    }
+    calcClamp();
+
+    function calcSpecificity() {
+      const sel = document.getElementById('selectorInput').value;
+      let id=0, cls=0, el=0;
+      const noStrings = sel.replace(/:not\(([^)]*)\)/g, '$1');
+      id += (noStrings.match(/#[a-zA-Z]/g)||[]).length;
+      cls += (noStrings.match(/\.[a-zA-Z]/g)||[]).length;
+      cls += (noStrings.match(/\[[^\]]+\]/g)||[]).length;
+      cls += (noStrings.match(/:(hover|focus|active|visited|first-child|last-child|nth-child|nth-of-type)[^a-z]/gi)||[]).length;
+      el += (noStrings.match(/(?:^|[\s>+~])([a-z][a-z0-9]*)/gi)||[]).length;
+      el += (noStrings.match(/::(before|after|first-line|first-letter)/gi)||[]).length;
+      const score = id*100 + cls*10 + el;
+      document.getElementById('specResult').textContent = `(${id}, ${cls}, ${el}) = Specificity: ${score}  |  IDs:${id} Classes:${cls} Elements:${el}`;
+    }
+
+    // ── Regex Tester ─────────────────────────────────
+    function testRegex() {
+      const pattern = document.getElementById('regexInput').value;
+      const flags = document.getElementById('flagsInput').value;
+      const text = document.getElementById('testInput').value;
+      const res = document.getElementById('regexResult');
+      if (!pattern) { res.innerHTML = '<span style="color:var(--text3)">Enter a pattern above</span>'; return; }
+      try {
+        const re = new RegExp(pattern, flags);
+        const matches = [...text.matchAll(new RegExp(pattern, flags.includes('g') ? flags : flags+'g'))];
+        if (matches.length === 0) { res.innerHTML = '<span style="color:var(--red)">✗ No matches</span>'; return; }
+        res.innerHTML = `<span style="color:var(--green)">✓ ${matches.length} match${matches.length>1?'es':''}</span><br><br>` +
+          matches.map((m,i) => `<span style="color:var(--accent)">Match ${i+1}:</span> "${m[0]}" at index ${m.index}`).join('<br>');
+      } catch(e) { res.innerHTML = `<span style="color:var(--red)">Invalid regex: ${e.message}</span>`; }
+    }
+
+    const regexExamples = {
+      email: { pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', text: 'Contact us: admin@edusphere.com or support@edusphere.io' },
+      url: { pattern: 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z]{2,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)', text: 'Visit https://edusphere.com or http://www.google.com for more.' },
+      phone: { pattern: '(\\+\\d{1,3})?[-. ]?\\(?\\d{3}\\)?[-. ]?\\d{3}[-. ]?\\d{4}', text: 'Call us: +91 98765 43210 or (555) 123-4567' },
+      password: { pattern: '(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}', text: 'Secure1! MyPass@23 weakpass hello123 Str0ng!Pass' },
+      hex: { pattern: '#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})', text: 'Colors: #4f8ef7 #fff #FF5733 invalid: #xyz' }
+    };
+
+    function loadRegexExample(type) {
+      const ex = regexExamples[type];
+      document.getElementById('regexInput').value = ex.pattern;
+      document.getElementById('testInput').value = ex.text;
+      document.getElementById('flagsInput').value = 'gi';
+      testRegex();
+    }
+  </script>
+</body>
+</html>

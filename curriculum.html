@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curriculum — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .curr-layout { max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; }
+    .unit-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 24px; overflow: hidden; }
+    .unit-header-bar { display: flex; align-items: center; justify-content: space-between; padding: 22px 28px; cursor: pointer; transition: background 0.2s; }
+    .unit-header-bar:hover { background: rgba(255,255,255,0.03); }
+    .unit-left { display: flex; align-items: center; gap: 18px; }
+    .unit-roman { font-family: var(--font-head); font-size: 1.4rem; font-weight: 800; color: var(--border2); min-width: 30px; }
+    .unit-title-text h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 3px; }
+    .unit-title-text p { font-size: 0.84rem; color: var(--text2); }
+    .unit-meta { display: flex; align-items: center; gap: 16px; }
+    .unit-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.05em; }
+    .badge-html { background: rgba(255,100,50,0.12); color: #ff6432; }
+    .badge-css { background: rgba(38,170,225,0.12); color: #26aae1; }
+    .badge-js { background: rgba(245,200,66,0.12); color: var(--yellow); }
+    .badge-ts { background: rgba(49,120,198,0.12); color: #3178c6; }
+    .badge-full { background: rgba(34,194,122,0.12); color: var(--green); }
+    .badge-tools { background: rgba(124,95,247,0.12); color: var(--accent2); }
+    .unit-toggle { color: var(--text3); font-size: 1.2rem; transition: transform 0.3s; }
+    .unit-toggle.open { transform: rotate(180deg); }
+    .unit-body { display: none; padding: 0 28px 28px; border-top: 1px solid var(--border); }
+    .unit-body.open { display: block; }
+    .lesson-list { margin-top: 20px; }
+    .lesson { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .lesson:last-child { border-bottom: none; }
+    .lesson-num { min-width: 32px; height: 32px; border-radius: 8px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--text3); }
+    .lesson-content h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .lesson-content p { font-size: 0.84rem; color: var(--text2); line-height: 1.5; }
+    .lesson-content .code-snippet { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-family: var(--font-mono); font-size: 0.8rem; color: #c3e88d; margin-top: 10px; overflow-x: auto; white-space: pre; }
+    .lesson-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; margin-top: 4px; }
+    .tag-beginner { background: rgba(34,194,122,0.1); color: var(--green); }
+    .tag-intermediate { background: rgba(245,200,66,0.1); color: var(--yellow); }
+    .tag-advanced { background: rgba(242,87,87,0.1); color: var(--red); }
+    .unit-progress-wrap { margin-top: 20px; }
+    .unit-progress-wrap label { font-size: 0.8rem; color: var(--text3); margin-bottom: 6px; display: block; }
+    .progress-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1s; }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="page-hero">
+    <div class="page-tag">Full Curriculum</div>
+    <h1>Six Units to <em>Mastery</em></h1>
+    <p>Complete study material from HTML basics to full-stack TypeScript development</p>
+  </div>
+
+  <div class="curr-layout">
+
+    <!-- UNIT 1: HTML & CSS -->
+    <div class="unit-card" id="unit1">
+      <div class="unit-header-bar" onclick="toggleUnit(this)">
+        <div class="unit-left">
+          <span class="unit-roman">I</span>
+          <div class="unit-title-text">
+            <h3>HTML5 & CSS3 Foundations</h3>
+            <p>8 lessons · 12 hours · Beginner</p>
+          </div>
+        </div>
+        <div class="unit-meta">
+          <span class="unit-badge badge-html">HTML5</span>
+          <span class="unit-badge badge-css">CSS3</span>
+          <span class="unit-toggle">▼</span>
+        </div>
+      </div>
+      <div class="unit-body">
+        <div class="unit-progress-wrap"><label>Progress</label><div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div></div>
+        <div class="lesson-list">
+          <div class="lesson"><div class="lesson-num">1</div><div class="lesson-content">
+            <h4>Introduction to HTML — What is the Web?</h4>
+            <p>Understanding how browsers work, HTTP basics, HTML document structure, DOCTYPE, head and body elements.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My First Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">2</div><div class="lesson-content">
+            <h4>Semantic HTML5 Elements</h4>
+            <p>Using &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;article&gt;, &lt;aside&gt;, &lt;footer&gt; for meaning and accessibility.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">&lt;header&gt;
+  &lt;nav&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Post Title&lt;/h2&gt;
+    &lt;p&gt;Content here...&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/main&gt;</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">3</div><div class="lesson-content">
+            <h4>HTML Forms & Input Types</h4>
+            <p>Building accessible forms with labels, input types (text, email, password, checkbox, radio, select), form validation attributes.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">&lt;form action="/submit" method="POST"&gt;
+  &lt;label for="email"&gt;Email:&lt;/label&gt;
+  &lt;input type="email" id="email" name="email" required&gt;
+  &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">4</div><div class="lesson-content">
+            <h4>CSS Box Model & Selectors</h4>
+            <p>Understanding margin, padding, border, content. CSS selectors: class, ID, pseudo-classes, combinators, specificity.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">/* Box model */
+.card {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin: 10px auto;
+  box-sizing: border-box;
+}
+
+/* Pseudo-class */
+.btn:hover { background: #3a7ee6; }</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">5</div><div class="lesson-content">
+            <h4>CSS Flexbox Layout</h4>
+            <p>One-dimensional layouts with flex containers, flex items, justify-content, align-items, flex-wrap, flex-grow/shrink.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">6</div><div class="lesson-content">
+            <h4>CSS Grid Layout</h4>
+            <p>Two-dimensional layouts with grid-template-columns/rows, grid-area, auto-fit, minmax for truly responsive designs.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.featured { grid-column: span 2; }</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">7</div><div class="lesson-content">
+            <h4>Responsive Design & Media Queries</h4>
+            <p>Mobile-first approach, breakpoints, viewport meta tag, fluid typography with clamp(), responsive images.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">/* Mobile first */
+.container { padding: 16px; }
+
+@media (min-width: 768px) {
+  .container { padding: 32px; }
+}
+
+/* Fluid type */
+h1 { font-size: clamp(1.8rem, 4vw, 3.5rem); }</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">8</div><div class="lesson-content">
+            <h4>CSS Animations & Transitions</h4>
+            <p>Keyframe animations, transition properties, transform (translate, rotate, scale), animation-timing-function, will-change.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: slideIn 0.4s ease forwards;
+  transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-4px); }</div>
+          </div></div>
+        </div>
+        <div style="margin-top:20px;"><a href="quiz.html?unit=1"><button class="btn-primary">Take Unit Quiz →</button></a></div>
+      </div>
+    </div>
+
+    <!-- UNIT 2: JavaScript Fundamentals -->
+    <div class="unit-card" id="unit2">
+      <div class="unit-header-bar" onclick="toggleUnit(this)">
+        <div class="unit-left">
+          <span class="unit-roman">II</span>
+          <div class="unit-title-text">
+            <h3>JavaScript Programming Fundamentals</h3>
+            <p>10 lessons · 16 hours · Beginner → Intermediate</p>
+          </div>
+        </div>
+        <div class="unit-meta">
+          <span class="unit-badge badge-js">JavaScript</span>
+          <span class="unit-toggle">▼</span>
+        </div>
+      </div>
+      <div class="unit-body">
+        <div class="unit-progress-wrap"><label>Progress</label><div class="progress-bar"><div class="progress-fill" style="width:58%"></div></div></div>
+        <div class="lesson-list">
+          <div class="lesson"><div class="lesson-num">1</div><div class="lesson-content">
+            <h4>Variables, Data Types & Operators</h4>
+            <p>var vs let vs const, primitive types (string, number, boolean, null, undefined, symbol), type coercion, operators.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">const name = "Alice";         // string
+let age = 25;                 // number
+const isActive = true;        // boolean
+let score = null;             // null
+
+// Template literals
+console.log(`Hello, ${name}! Age: ${age}`);</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">2</div><div class="lesson-content">
+            <h4>Control Flow — if/else, switch, loops</h4>
+            <p>Conditionals, ternary operator, for/while/do-while loops, break/continue, for...of, for...in.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">const scores = [85, 92, 78, 95];
+
+for (const score of scores) {
+  if (score >= 90) console.log("A grade");
+  else if (score >= 80) console.log("B grade");
+  else console.log("C grade");
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">3</div><div class="lesson-content">
+            <h4>Functions — Declarations, Expressions & Arrow</h4>
+            <p>Function declarations vs expressions, arrow functions, default parameters, rest parameters, return values.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">// Arrow function
+const add = (a, b) => a + b;
+
+// Default params
+const greet = (name = "World") => `Hello, ${name}!`;
+
+// Rest params
+const sum = (...nums) => nums.reduce((a, b) => a + b, 0);</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">4</div><div class="lesson-content">
+            <h4>Arrays & Array Methods</h4>
+            <p>Array creation, push/pop/shift/unshift, map, filter, reduce, find, some, every, spread operator.</p>
+            <span class="lesson-tag tag-beginner">Beginner</span>
+            <div class="code-snippet">const nums = [1, 2, 3, 4, 5];
+
+const doubled = nums.map(n => n * 2);       // [2,4,6,8,10]
+const evens   = nums.filter(n => n % 2 === 0); // [2,4]
+const total   = nums.reduce((s, n) => s + n, 0); // 15</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">5</div><div class="lesson-content">
+            <h4>Objects & Destructuring</h4>
+            <p>Object literals, property shorthand, computed keys, Object methods, destructuring assignment, spread in objects.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">const user = { name: "Bob", age: 30, role: "dev" };
+
+// Destructuring
+const { name, age, role = "user" } = user;
+
+// Spread
+const updated = { ...user, age: 31, city: "Mumbai" };</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">6</div><div class="lesson-content">
+            <h4>DOM Manipulation</h4>
+            <p>querySelector, createElement, appendChild, innerHTML vs textContent, classList, dataset, event delegation.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">const btn = document.querySelector('#myBtn');
+const list = document.querySelector('#list');
+
+btn.addEventListener('click', () => {
+  const li = document.createElement('li');
+  li.textContent = 'New item';
+  list.appendChild(li);
+});</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">7</div><div class="lesson-content">
+            <h4>Events & Event Handling</h4>
+            <p>addEventListener, event object, stopPropagation, preventDefault, event delegation pattern, custom events.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">// Event delegation
+document.querySelector('ul').addEventListener('click', (e) => {
+  if (e.target.tagName === 'LI') {
+    e.target.classList.toggle('done');
+  }
+});
+
+// Custom event
+const event = new CustomEvent('userLogin', { detail: { userId: 1 } });
+document.dispatchEvent(event);</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">8</div><div class="lesson-content">
+            <h4>Scope, Hoisting & Closures</h4>
+            <p>Global vs function vs block scope, hoisting of var/function, temporal dead zone, closure use cases.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">// Closure — counter factory
+function makeCounter(start = 0) {
+  let count = start;
+  return {
+    increment: () => ++count,
+    decrement: () => --count,
+    value: () => count
+  };
+}
+const counter = makeCounter(5);
+counter.increment(); // 6</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">9</div><div class="lesson-content">
+            <h4>Error Handling & Debugging</h4>
+            <p>try/catch/finally, Error types, throwing custom errors, console methods, debugger statement.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">function divide(a, b) {
+  if (b === 0) throw new Error("Division by zero!");
+  return a / b;
+}
+
+try {
+  console.log(divide(10, 0));
+} catch (err) {
+  console.error("Caught:", err.message);
+} finally {
+  console.log("Done");
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">10</div><div class="lesson-content">
+            <h4>Fetch API & Working with JSON</h4>
+            <p>Fetch API, GET/POST requests, JSON.parse/stringify, response handling, async data loading patterns.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">async function getUsers() {
+  const res = await fetch('https://api.example.com/users');
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  return data.users;
+}
+
+getUsers().then(users => console.log(users));</div>
+          </div></div>
+        </div>
+        <div style="margin-top:20px;"><a href="quiz.html?unit=2"><button class="btn-primary">Take Unit Quiz →</button></a></div>
+      </div>
+    </div>
+
+    <!-- UNIT 3: Advanced JS -->
+    <div class="unit-card" id="unit3">
+      <div class="unit-header-bar" onclick="toggleUnit(this)">
+        <div class="unit-left">
+          <span class="unit-roman">III</span>
+          <div class="unit-title-text">
+            <h3>Advanced JS & Async Programming</h3>
+            <p>9 lessons · 18 hours · Intermediate → Advanced</p>
+          </div>
+        </div>
+        <div class="unit-meta">
+          <span class="unit-badge badge-js">Advanced JS</span>
+          <span class="unit-toggle">▼</span>
+        </div>
+      </div>
+      <div class="unit-body">
+        <div class="unit-progress-wrap"><label>Progress</label><div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div></div>
+        <div class="lesson-list">
+          <div class="lesson"><div class="lesson-num">1</div><div class="lesson-content">
+            <h4>Execution Context & Call Stack</h4>
+            <p>How JavaScript executes code, global/function execution context, call stack, stack overflow, single-threaded nature.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">// Stack trace
+function third() { throw new Error("Oops!"); }
+function second() { return third(); }
+function first() { return second(); }
+
+// Call stack: first → second → third → Error</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">2</div><div class="lesson-content">
+            <h4>Prototype Chain & Inheritance</h4>
+            <p>__proto__, Object.create, class syntax, extends, super, method overriding, instanceof.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">class Animal {
+  constructor(name) { this.name = name; }
+  speak() { return `${this.name} makes a sound.`; }
+}
+
+class Dog extends Animal {
+  speak() { return `${this.name} barks.`; }
+}
+
+const d = new Dog("Rex");
+d.speak(); // "Rex barks."</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">3</div><div class="lesson-content">
+            <h4>Event Loop, Microtasks & Macrotasks</h4>
+            <p>Web APIs, callback queue, microtask queue, event loop mechanism, Promise vs setTimeout ordering.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">console.log('1');               // sync
+setTimeout(() => console.log('2'), 0); // macrotask
+Promise.resolve().then(() => console.log('3')); // microtask
+console.log('4');               // sync
+// Output: 1, 4, 3, 2</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">4</div><div class="lesson-content">
+            <h4>Promises Deep Dive</h4>
+            <p>Promise states, chaining, Promise.all, Promise.allSettled, Promise.race, error propagation.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">const p1 = fetch('/api/user');
+const p2 = fetch('/api/posts');
+
+// Parallel fetch
+const [user, posts] = await Promise.all([p1.then(r=>r.json()), p2.then(r=>r.json())]);
+
+// Handle mixed results
+const results = await Promise.allSettled([p1, p2]);</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">5</div><div class="lesson-content">
+            <h4>Async/Await Patterns</h4>
+            <p>Converting promise chains to async/await, error handling, parallel vs sequential execution, async IIFE.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">// Sequential (slow)
+const a = await fetchA();
+const b = await fetchB();
+
+// Parallel (fast)
+const [a, b] = await Promise.all([fetchA(), fetchB()]);
+
+// Error handling
+try {
+  const data = await fetchData();
+} catch (e) { console.error(e); }</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">6</div><div class="lesson-content">
+            <h4>Generators & Iterators</h4>
+            <p>Symbol.iterator, custom iterables, generator functions, yield, async generators for streaming data.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">function* range(start, end, step = 1) {
+  for (let i = start; i <= end; i += step) {
+    yield i;
+  }
+}
+
+for (const n of range(1, 10, 2)) {
+  console.log(n); // 1, 3, 5, 7, 9
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">7</div><div class="lesson-content">
+            <h4>Modules (ES Modules & CommonJS)</h4>
+            <p>import/export, named vs default, dynamic import(), tree shaking, module bundling concepts.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">// math.js
+export const add = (a, b) => a + b;
+export default function multiply(a, b) { return a * b; }
+
+// main.js
+import multiply, { add } from './math.js';
+
+// Dynamic
+const { add } = await import('./math.js');</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">8</div><div class="lesson-content">
+            <h4>WeakMap, WeakSet, Symbol & Proxy</h4>
+            <p>Memory-safe collections, unique keys with Symbol, Proxy for metaprogramming, Reflect API.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">const cache = new WeakMap();
+
+function memoize(fn, obj) {
+  if (!cache.has(obj)) {
+    cache.set(obj, fn(obj));
+  }
+  return cache.get(obj);
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">9</div><div class="lesson-content">
+            <h4>Performance & Memory Management</h4>
+            <p>Memory leaks, garbage collection, debounce/throttle, Web Workers for off-thread computation.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">// Debounce
+function debounce(fn, delay) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
+const search = debounce(fetchResults, 300);</div>
+          </div></div>
+        </div>
+        <div style="margin-top:20px;"><a href="quiz.html?unit=3"><button class="btn-primary">Take Unit Quiz →</button></a></div>
+      </div>
+    </div>
+
+    <!-- UNIT 4: TypeScript -->
+    <div class="unit-card" id="unit4">
+      <div class="unit-header-bar" onclick="toggleUnit(this)">
+        <div class="unit-left">
+          <span class="unit-roman">IV</span>
+          <div class="unit-title-text">
+            <h3>TypeScript Fundamentals</h3>
+            <p>8 lessons · 16 hours · Intermediate</p>
+          </div>
+        </div>
+        <div class="unit-meta">
+          <span class="unit-badge badge-ts">TypeScript</span>
+          <span class="unit-toggle">▼</span>
+        </div>
+      </div>
+      <div class="unit-body">
+        <div class="lesson-list">
+          <div class="lesson"><div class="lesson-num">1</div><div class="lesson-content">
+            <h4>Why TypeScript? Setup & tsconfig</h4>
+            <p>Type safety benefits, installing TypeScript, tsconfig.json configuration, compiling TS to JS.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "moduleResolution": "node",
+    "outDir": "./dist"
+  }
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">2</div><div class="lesson-content">
+            <h4>Types, Interfaces & Type Aliases</h4>
+            <p>Primitive types, type inference, union/intersection types, interfaces, type aliases, optional/readonly properties.</p>
+            <span class="lesson-tag tag-intermediate">Intermediate</span>
+            <div class="code-snippet">interface User {
+  readonly id: number;
+  name: string;
+  email?: string;           // optional
+  role: 'admin' | 'user';   // union
+}
+
+type ID = string | number;  // type alias</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">3</div><div class="lesson-content">
+            <h4>Generics</h4>
+            <p>Generic functions, generic interfaces, generic constraints, utility types (Partial, Readonly, Pick, Record, Omit).</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">function first<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+
+// Constraint
+function getLength<T extends { length: number }>(val: T): number {
+  return val.length;
+}</div>
+          </div></div>
+          <div class="lesson"><div class="lesson-num">4</div><div class="lesson-content">
+            <h4>Enums & Decorators</h4>
+            <p>Numeric/string enums, const enums, decorators for classes/methods/properties, experimental metadata.</p>
+            <span class="lesson-tag tag-advanced">Advanced</span>
+            <div class="code-snippet">enum Direction { Up, Down, Left, Right }
+const move = (dir: Direction) => console.log(Direction[dir]);
+
+// String enum
+enum Status { Active = 'ACTIVE', Inactive = 'INACTIVE' }</div>
+          </div></div>
+        </div>
+        <div style="margin-top:20px;"><a href="quiz.html?unit=4"><button class="btn-primary">Take Unit Quiz →</button></a></div>
+      </div>
+    </div>
+
+    <!-- UNIT 5 & 6 condensed -->
+    <div class="unit-card" id="unit5">
+      <div class="unit-header-bar" onclick="toggleUnit(this)">
+        <div class="unit-left"><span class="unit-roman">V</span><div class="unit-title-text"><h3>Full-Stack Development with Node.js</h3><p>10 lessons · 20 hours · Advanced</p></div></div>
+        <div class="unit-meta"><span class="unit-badge badge-full">Node.js</span><span class="unit-toggle">▼</span></div>
+      </div>
+      <div class="unit-body">
+        <div class="lesson-list">
+          <div class="lesson"><div class="lesson-num">1</div><div class="lesson-content"><h4>Node.js & npm Ecosystem</h4><p>Event-driven architecture, CommonJS modules, package.json, npm/yarn/pnpm.</p><span class="lesson-tag tag-advanced">Advanced</span></div></div>
+          <div class="lesson"><div class="lesson-num">2</div><div class="lesson-content"><h4>Express.js REST API</h4><p>Routing, middleware, request/response, error handling, CORS.</p><span class="lesson-tag tag-advanced">Advanced</span><div class="code-snippet">app.get('/api/users', async (req, res) => {
+  const users = await db.find();
+  res.json({ users });
+});</div></div></div>
+          <div class="lesson"><div class="lesson-num">3</div><div class="lesson-content"><h4>Databases — SQL & NoSQL</h4><p>PostgreSQL with Prisma ORM, MongoDB with Mongoose, migrations, querying.</p><span class="lesson-tag tag-advanced">Advanced</span></div></div>
+          <div class="lesson"><div class="lesson-num">4</div><div class="lesson-content"><h4>Authentication & JWT</h4><p>bcrypt password hashing, JWT tokens, refresh tokens, protected routes, OAuth basics.</p><span class="lesson-tag tag-advanced">Advanced</span></div></div>
+        </div>
+        <div style="margin-top:20px;"><a href="quiz.html?unit=5"><button class="btn-primary">Take Unit Quiz →</button></a></div>
+      </div>
+    </div>
+
+    <div class="unit-card" id="unit6">
+      <div class="unit-header-bar" onclick="toggleUnit(this)">
+        <div class="unit-left"><span class="unit-roman">VI</span><div class="unit-title-text"><h3>Tooling, Testing & Deployment</h3><p>8 lessons · 14 hours · Advanced</p></div></div>
+        <div class="unit-meta"><span class="unit-badge badge-tools">DevOps</span><span class="unit-toggle">▼</span></div>
+      </div>
+      <div class="unit-body">
+        <div class="lesson-list">
+          <div class="lesson"><div class="lesson-num">1</div><div class="lesson-content"><h4>Git & GitHub Workflows</h4><p>Branching strategies, PRs, code review, rebasing, git hooks with Husky.</p><span class="lesson-tag tag-intermediate">Intermediate</span><div class="code-snippet">git checkout -b feature/login
+git add . && git commit -m "feat: add login form"
+git push origin feature/login</div></div></div>
+          <div class="lesson"><div class="lesson-num">2</div><div class="lesson-content"><h4>Webpack, Vite & Bundlers</h4><p>Module bundling, code splitting, tree shaking, Vite dev server, hot module replacement.</p><span class="lesson-tag tag-advanced">Advanced</span></div></div>
+          <div class="lesson"><div class="lesson-num">3</div><div class="lesson-content"><h4>Testing — Jest & Vitest</h4><p>Unit tests, integration tests, mocking, code coverage, TDD basics.</p><span class="lesson-tag tag-advanced">Advanced</span></div></div>
+          <div class="lesson"><div class="lesson-num">4</div><div class="lesson-content"><h4>Docker & CI/CD</h4><p>Containerizing apps, Docker Compose, GitHub Actions pipelines, deploying to Railway/Vercel.</p><span class="lesson-tag tag-advanced">Advanced</span></div></div>
+        </div>
+        <div style="margin-top:20px;"><a href="quiz.html?unit=6"><button class="btn-primary">Take Unit Quiz →</button></a></div>
+      </div>
+    </div>
+
+  </div><!-- end .curr-layout -->
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+
+    function toggleUnit(headerBar) {
+      const body = headerBar.nextElementSibling;
+      const toggle = headerBar.querySelector('.unit-toggle');
+      body.classList.toggle('open');
+      toggle.classList.toggle('open');
+    }
+
+    // Auto-open if hash
+    window.addEventListener('load', () => {
+      const hash = location.hash;
+      if (hash) {
+        const card = document.querySelector(hash);
+        if (card) {
+          const bar = card.querySelector('.unit-header-bar');
+          if (bar) { toggleUnit(bar); card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        }
+      } else {
+        // Open unit 1 by default
+        const first = document.querySelector('.unit-header-bar');
+        if (first) toggleUnit(first);
+      }
+    });
+  </script>
+</body>
+</html>

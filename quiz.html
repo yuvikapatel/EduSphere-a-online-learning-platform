@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz — EduSphere</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    .quiz-wrapper { max-width: 800px; margin: 0 auto; padding: 100px 24px 80px; }
+    .unit-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+    .unit-btn { padding: 9px 20px; border-radius: 100px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 0.87rem; font-weight: 600; transition: all 0.2s; }
+    .unit-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .unit-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .quiz-header { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 28px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+    .quiz-title { font-size: 1.2rem; font-weight: 700; }
+    .quiz-meta { font-size: 0.84rem; color: var(--text2); margin-top: 4px; }
+    .quiz-score-badge { background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2); border-radius: 12px; padding: 12px 20px; text-align: center; }
+    .score-num { font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+    .score-label { font-size: 0.78rem; color: var(--text3); }
+    .progress-bar { height: 5px; background: var(--bg3); border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s; }
+    .question-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 32px; margin-bottom: 20px; }
+    .q-num { font-size: 0.78rem; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+    .q-text { font-size: 1.05rem; font-weight: 600; line-height: 1.5; margin-bottom: 24px; }
+    .q-code { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-family: var(--font-mono); font-size: 0.83rem; color: #c3e88d; margin-bottom: 20px; white-space: pre; overflow-x: auto; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--bg3); border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .option:hover:not(.answered) { border-color: var(--accent); background: rgba(79,142,247,0.05); }
+    .option.selected { border-color: var(--accent); background: rgba(79,142,247,0.1); }
+    .option.correct { border-color: var(--green); background: rgba(34,194,122,0.1); }
+    .option.wrong { border-color: var(--red); background: rgba(242,87,87,0.1); }
+    .opt-letter { width: 30px; height: 30px; border-radius: 8px; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+    .option.correct .opt-letter { background: var(--green); color: #000; }
+    .option.wrong .opt-letter { background: var(--red); color: #fff; }
+    .option.selected .opt-letter { background: var(--accent); color: #fff; }
+    .opt-text { font-size: 0.92rem; flex: 1; }
+    .explanation { display: none; margin-top: 16px; padding: 14px 18px; border-radius: 10px; font-size: 0.87rem; line-height: 1.5; }
+    .explanation.show { display: block; }
+    .explanation.correct-exp { background: rgba(34,194,122,0.08); border: 1px solid rgba(34,194,122,0.2); color: var(--green); }
+    .explanation.wrong-exp { background: rgba(242,87,87,0.08); border: 1px solid rgba(242,87,87,0.2); color: var(--red); }
+    .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+    .results-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 24px; padding: 48px; text-align: center; display: none; }
+    .results-card.show { display: block; }
+    .result-score { font-family: var(--font-head); font-size: 4rem; font-weight: 800; margin: 16px 0; }
+    .result-grade { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+    .result-msg { color: var(--text2); margin-bottom: 32px; }
+    .result-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .rb-item { background: var(--bg3); border-radius: 12px; padding: 16px; }
+    .rb-num { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; }
+    .rb-label { font-size: 0.8rem; color: var(--text3); }
+  </style>
+</head>
+<body>
+  <script src="nav.js"></script>
+  <script>injectNav();</script>
+
+  <div class="quiz-wrapper">
+    <div class="page-tag" style="display:inline-block;margin-bottom:20px;">Knowledge Test</div>
+    <h1 style="font-size:2rem;margin-bottom:8px;">Unit <em>Quizzes</em></h1>
+    <p style="color:var(--text2);margin-bottom:28px;">Test your understanding. Select a unit to begin.</p>
+
+    <div class="unit-selector" id="unitSelector">
+      <button class="unit-btn active" onclick="loadQuiz(1, this)">Unit I: HTML & CSS</button>
+      <button class="unit-btn" onclick="loadQuiz(2, this)">Unit II: JavaScript</button>
+      <button class="unit-btn" onclick="loadQuiz(3, this)">Unit III: Advanced JS</button>
+      <button class="unit-btn" onclick="loadQuiz(4, this)">Unit IV: TypeScript</button>
+      <button class="unit-btn" onclick="loadQuiz(5, this)">Unit V: Full-Stack</button>
+    </div>
+
+    <div class="quiz-header">
+      <div>
+        <div class="quiz-title" id="quizTitle">Unit I: HTML5 & CSS3 Foundations</div>
+        <div class="quiz-meta" id="quizMeta">10 questions · ~10 minutes</div>
+      </div>
+      <div class="quiz-score-badge">
+        <div class="score-num" id="scoreDisplay">0/<span id="totalDisplay">10</span></div>
+        <div class="score-label">Score</div>
+      </div>
+    </div>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
+
+    <div id="quizContainer"></div>
+
+    <div class="quiz-nav">
+      <button class="btn-outline" id="prevBtn" onclick="navigate(-1)" style="display:none;">← Previous</button>
+      <div id="qCounter" style="font-size:0.87rem;color:var(--text3);"></div>
+      <button class="btn-primary" id="nextBtn" onclick="navigate(1)">Next Question →</button>
+    </div>
+
+    <div class="results-card" id="resultsCard">
+      <div style="font-size:2.5rem;">🏆</div>
+      <div class="result-grade" id="resultGrade">Excellent!</div>
+      <div class="result-score" id="resultScore">8/10</div>
+      <div class="result-msg" id="resultMsg">Great job! You've mastered this unit.</div>
+      <div class="result-breakdown">
+        <div class="rb-item"><div class="rb-num" id="rbCorrect" style="color:var(--green)">0</div><div class="rb-label">Correct</div></div>
+        <div class="rb-item"><div class="rb-num" id="rbWrong" style="color:var(--red)">0</div><div class="rb-label">Wrong</div></div>
+        <div class="rb-item"><div class="rb-num" id="rbPct" style="color:var(--accent)">0%</div><div class="rb-label">Score</div></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="retakeQuiz()">Retake Quiz</button>
+        <a href="curriculum.html"><button class="btn-outline">Back to Curriculum</button></a>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    injectFooter();
+
+    const ALL_QUESTIONS = {
+      1: [ // HTML & CSS
+        { q: "What does HTML stand for?", options: ["HyperText Markup Language","HighText Machine Language","HyperLink Text Markup Language","Hypertext Multiple Languages"], correct: 0, explanation: "HTML stands for HyperText Markup Language — the standard language for creating web pages." },
+        { q: "Which HTML5 element is used for the main content of a page?", options: ["<content>","<body>","<main>","<section>"], correct: 2, explanation: "<main> represents the dominant content of the document body. There should be only one per page." },
+        { q: "What CSS property is used to create space inside an element's border?", options: ["margin","spacing","padding","border-spacing"], correct: 2, explanation: "Padding creates space between the element's content and its border. Margin creates space outside the border." },
+        { q: "Which CSS value for display enables flexbox?", options: ["display: block","display: inline-flex","display: flex","Both B and C"], correct: 3, explanation: "Both 'flex' (block-level) and 'inline-flex' (inline-level) enable flexbox layout." },
+        { q: "What does the CSS box model consist of? (outside to inside)", options: ["Content → Padding → Border → Margin","Margin → Border → Padding → Content","Border → Padding → Content → Margin","Padding → Content → Margin → Border"], correct: 1, explanation: "The CSS box model from outside to inside: Margin → Border → Padding → Content." },
+        { q: "Which attribute makes an input field required?", options: ["validate","mandatory","required","must-fill"], correct: 2, explanation: "The 'required' attribute prevents form submission if the field is empty and shows a validation message." },
+        { q: "What is the correct CSS for making text bold?", code: "p { ___: ___; }", options: ["font-weight: bold","text-style: bold","font: bold","text-weight: 700"], correct: 0, explanation: "font-weight: bold (or font-weight: 700) makes text bold. Values range from 100 to 900." },
+        { q: "Which CSS unit is relative to the font-size of the root element?", options: ["em","px","rem","vh"], correct: 2, explanation: "rem (root em) is relative to the root element's font-size (usually 16px by default)." },
+        { q: "What does 'position: absolute' do?", options: ["Fixes element to the viewport","Positions relative to nearest positioned ancestor","Positions relative to the normal flow","Makes element sticky on scroll"], correct: 1, explanation: "position: absolute removes the element from normal flow and positions it relative to the nearest ancestor with position: relative/absolute/fixed." },
+        { q: "Which CSS Grid property defines column sizes?", code: ".grid {\n  display: grid;\n  ___: 1fr 1fr 1fr;\n}", options: ["grid-columns","column-template","grid-template-columns","columns"], correct: 2, explanation: "grid-template-columns defines the number and size of grid columns. '1fr 1fr 1fr' creates 3 equal columns." }
+      ],
+      2: [ // JavaScript
+        { q: "What keyword declares a block-scoped variable that can be reassigned?", options: ["var","let","const","def"], correct: 1, explanation: "'let' declares a block-scoped variable that can be reassigned. 'const' is block-scoped but cannot be reassigned. 'var' is function-scoped." },
+        { q: "What will this code output?", code: "console.log(typeof null);", options: ["null","undefined","object","string"], correct: 2, explanation: "typeof null returns 'object' — this is a famous JavaScript bug that was kept for backwards compatibility." },
+        { q: "Which array method returns a NEW array with transformed elements?", options: ["forEach","filter","map","reduce"], correct: 2, explanation: "map() creates a new array by applying a function to each element. forEach() doesn't return a new array." },
+        { q: "What is the output of this code?", code: "const arr = [1, 2, 3];\nconst [first, ...rest] = arr;\nconsole.log(rest);", options: ["[2]","[2,3]","[1,2]","[3]"], correct: 1, explanation: "The spread operator (...rest) captures all remaining elements after 'first', so rest = [2, 3]." },
+        { q: "Which method converts a JSON string to a JavaScript object?", options: ["JSON.stringify()","JSON.parse()","JSON.convert()","Object.fromJSON()"], correct: 1, explanation: "JSON.parse() converts a JSON string to a JavaScript object. JSON.stringify() does the reverse." },
+        { q: "What does '===' check in JavaScript?", options: ["Value only","Type only","Value AND type","Reference equality"], correct: 2, explanation: "'===' (strict equality) checks both value AND type. '==' (loose equality) performs type coercion before comparing." },
+        { q: "What will this output?", code: "function greet(name = 'World') {\n  return `Hello, ${name}!`;\n}\nconsole.log(greet());", options: ["Hello, !","Hello, undefined!","Hello, World!","Error"], correct: 2, explanation: "Default parameter 'World' is used when no argument is passed. The template literal creates 'Hello, World!'." },
+        { q: "Which method adds an element to the END of an array?", options: ["push()","pop()","unshift()","shift()"], correct: 0, explanation: "push() adds elements to the end. pop() removes from end. unshift() adds to front. shift() removes from front." },
+        { q: "What is a closure in JavaScript?", options: ["A function with no parameters","A function that has access to its outer scope variables even after the outer function returns","An immediately invoked function","A function inside a class"], correct: 1, explanation: "A closure is a function that retains access to its outer (lexical) scope even after the outer function has returned." },
+        { q: "What does the 'async' keyword before a function do?", options: ["Makes it run faster","Makes it return a Promise automatically","Prevents it from blocking","Both B and C"], correct: 3, explanation: "async functions implicitly return a Promise AND allow the use of 'await' inside them, which doesn't block the main thread." }
+      ],
+      3: [ // Advanced JS
+        { q: "What is the order of output?", code: "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\nconsole.log('D');", options: ["A B C D","A D B C","A D C B","A C D B"], correct: 2, explanation: "Synchronous: A, D. Then microtask queue (Promises): C. Then macrotask queue (setTimeout): B. Order: A, D, C, B." },
+        { q: "What does Promise.all() do when one promise rejects?", options: ["Returns the resolved ones","Ignores the rejected one","Immediately rejects with that error","Waits for all to settle"], correct: 2, explanation: "Promise.all() short-circuits on the first rejection and immediately rejects. Use Promise.allSettled() to handle all results." },
+        { q: "What is the output?", code: "function makeAdder(x) {\n  return (y) => x + y;\n}\nconst add5 = makeAdder(5);\nconsole.log(add5(3));", options: ["8","5","3","Error"], correct: 0, explanation: "makeAdder returns a closure that captures x. add5 = makeAdder(5) captures x=5. add5(3) returns 5+3 = 8." },
+        { q: "What is the purpose of the 'yield' keyword?", options: ["Throws an error","Pauses a generator function and returns a value","Ends a function","Imports a module"], correct: 1, explanation: "'yield' pauses execution of a generator function, returning the specified value to the iterator caller." },
+        { q: "Which is the correct way to handle errors in async/await?", options: ["async try/catch","promise.catch() only",".then().catch()","try/catch block"], correct: 3, explanation: "Use try/catch blocks with async/await for error handling — it's the cleanest and most readable approach." },
+        { q: "What does 'debounce' do in JavaScript?", options: ["Speeds up function calls","Limits how often a function runs by delaying execution","Caches function results","Runs a function exactly once"], correct: 1, explanation: "Debounce delays function execution until after a specified time has passed since the last invocation. Useful for search inputs." },
+        { q: "What is the 'event loop' responsible for?", options: ["Handling DOM events only","Managing memory allocation","Moving callbacks from the task queue to the call stack when it's empty","Running JavaScript in parallel"], correct: 2, explanation: "The event loop continuously checks if the call stack is empty and moves pending callbacks from the task queue to it." },
+        { q: "What does Object.freeze() do?", options: ["Deletes all properties","Prevents adding/modifying/deleting properties","Makes object immutable deeply","Converts to string"], correct: 1, explanation: "Object.freeze() makes an object's properties non-writable and non-configurable (shallow freeze only)." },
+        { q: "Which of these creates a copy of an array?", options: ["arr.slice()","[...arr]","Array.from(arr)","All of the above"], correct: 3, explanation: "All three create a shallow copy: slice(), spread syntax [...arr], and Array.from() all work for array copying." },
+        { q: "What is 'this' in an arrow function?", options: ["The function itself","The global object","Inherited from enclosing scope","undefined"], correct: 2, explanation: "Arrow functions don't have their own 'this'. They inherit 'this' from the enclosing lexical scope." }
+      ],
+      4: [ // TypeScript
+        { q: "What is the main benefit of TypeScript over JavaScript?", options: ["Faster runtime performance","Static type checking at compile time","Better CSS integration","Native module support"], correct: 1, explanation: "TypeScript adds static type checking, catching type errors at compile time rather than at runtime." },
+        { q: "Which TypeScript keyword marks a property as not reassignable?", options: ["static","final","readonly","immutable"], correct: 2, explanation: "'readonly' prevents a property from being reassigned after initialization." },
+        { q: "What does the '?' after a property name mean in TypeScript?", code: "interface User {\n  name: string;\n  email?: string;\n}", options: ["email is required","email is optional","email can be null","email is deprecated"], correct: 1, explanation: "The '?' makes a property optional — the object can have it or not." },
+        { q: "What is a TypeScript generic?", options: ["A reusable component that works with multiple types","A CSS class generator","A global variable","An abstract class"], correct: 0, explanation: "Generics allow you to write reusable code that works with multiple types while maintaining type safety." },
+        { q: "What is the difference between 'type' and 'interface' in TypeScript?", options: ["No difference","Interfaces can be extended, types cannot","Types support union/intersection, interfaces cannot directly","Interfaces are only for objects; types are more flexible"], correct: 3, explanation: "Both are similar but interfaces are primarily for object shapes and support declaration merging. Types are more flexible for unions/intersections." },
+        { q: "What does 'never' type mean in TypeScript?", options: ["A variable that can hold any value","A type that represents values that never occur","Same as void","An empty array type"], correct: 1, explanation: "'never' represents values that never occur — used for functions that always throw or never return." },
+        { q: "Which utility type makes all properties optional?", code: "type PartialUser = ___<User>;", options: ["Optional","Nullable","Partial","Possible"], correct: 2, explanation: "Partial<T> constructs a type with all properties of T set to optional. Very useful for update operations." },
+        { q: "What does 'as' do in TypeScript?", options: ["Variable assignment","Type assertion","Type guard","Module import alias"], correct: 1, explanation: "'as' is used for type assertion — telling TypeScript to treat a value as a specific type." }
+      ],
+      5: [ // Full-Stack
+        { q: "What is Node.js?", options: ["A front-end framework","A JavaScript runtime built on Chrome's V8 engine","A database system","A CSS preprocessor"], correct: 1, explanation: "Node.js is a JavaScript runtime environment that allows running JavaScript on the server side, built on V8." },
+        { q: "Which HTTP method is used to create a new resource in REST?", options: ["GET","PUT","POST","PATCH"], correct: 2, explanation: "POST creates a new resource. GET reads, PUT/PATCH updates, DELETE removes." },
+        { q: "What does 'middleware' do in Express.js?", options: ["Stores data in memory","Intercepts and processes requests before they reach route handlers","Serves static files only","Handles database queries"], correct: 1, explanation: "Middleware functions execute in the request-response cycle, processing requests before they reach route handlers." },
+        { q: "What is JWT used for?", options: ["Styling web pages","Authentication and authorization using tokens","Database queries","File compression"], correct: 1, explanation: "JWT (JSON Web Tokens) are used for authentication — they securely transmit information between parties as JSON." },
+        { q: "What does 'async/await' do in Node.js?", options: ["Creates multiple threads","Handles asynchronous code in a synchronous-looking syntax","Compiles TypeScript","Manages memory"], correct: 1, explanation: "async/await makes asynchronous code look and behave more like synchronous code, improving readability." },
+        { q: "What is CORS?", options: ["A CSS framework","A security mechanism controlling cross-origin HTTP requests","A database protocol","A JavaScript library"], correct: 1, explanation: "CORS (Cross-Origin Resource Sharing) is a security feature that controls which origins can make requests to your server." },
+        { q: "Which command initializes a new Node.js project?", options: ["node init","npm start","npm init -y","node new project"], correct: 2, explanation: "'npm init -y' creates a package.json file with default values, initializing a new Node.js project." },
+        { q: "What is the purpose of 'bcrypt'?", options: ["HTTP routing","Password hashing for secure storage","Template rendering","Database ORM"], correct: 1, explanation: "bcrypt is a password hashing library used to securely store passwords using a one-way hashing algorithm." },
+        { q: "What does 'res.json()' do in Express?", options: ["Reads JSON from request body","Sends a JSON response","Converts response to JSON string","Validates JSON schema"], correct: 1, explanation: "res.json() sends a JSON response with correct Content-Type headers, serializing the passed object." },
+        { q: "What is an ORM?", options: ["A type of API","Object-Relational Mapping — abstracts database queries into code","A deployment tool","A testing framework"], correct: 1, explanation: "ORM (Object-Relational Mapping) lets you interact with a database using code objects instead of raw SQL." }
+      ]
+    };
+
+    let currentUnit = 1;
+    let currentQ = 0;
+    let answers = {};
+    let score = 0;
+    let questions = [];
+
+    function loadQuiz(unit, btn) {
+      currentUnit = unit;
+      currentQ = 0;
+      answers = {};
+      score = 0;
+      questions = ALL_QUESTIONS[unit];
+
+      document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const titles = ['', 'Unit I: HTML5 & CSS3 Foundations', 'Unit II: JavaScript Fundamentals', 'Unit III: Advanced JS & Async', 'Unit IV: TypeScript', 'Unit V: Full-Stack Development'];
+      document.getElementById('quizTitle').textContent = titles[unit];
+      document.getElementById('totalDisplay').textContent = questions.length;
+      document.getElementById('scoreDisplay').textContent = `0/${questions.length}`;
+      document.getElementById('resultsCard').classList.remove('show');
+      document.getElementById('quizContainer').style.display = 'block';
+      document.getElementById('quizNav').style.display = 'flex';
+
+      renderQuestion();
+    }
+
+    // Make quizNav a div with id
+    document.querySelector('.quiz-nav').id = 'quizNav';
+
+    function renderQuestion() {
+      const q = questions[currentQ];
+      const total = questions.length;
+      document.getElementById('progressBar').style.width = `${((currentQ) / total) * 100}%`;
+      document.getElementById('qCounter').textContent = `Question ${currentQ + 1} of ${total}`;
+      document.getElementById('prevBtn').style.display = currentQ > 0 ? 'block' : 'none';
+
+      const isLast = currentQ === total - 1;
+      document.getElementById('nextBtn').textContent = isLast ? 'Finish Quiz →' : 'Next Question →';
+
+      const answered = answers[currentQ] !== undefined;
+      const container = document.getElementById('quizContainer');
+      const letters = ['A','B','C','D'];
+
+      container.innerHTML = `
+        <div class="question-card">
+          <div class="q-num">Question ${currentQ + 1} of ${total}</div>
+          <div class="q-text">${q.q}</div>
+          ${q.code ? `<div class="q-code">${q.code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>` : ''}
+          <div class="options" id="options">
+            ${q.options.map((opt, i) => {
+              let cls = '';
+              if (answered) {
+                if (i === q.correct) cls = 'correct';
+                else if (answers[currentQ] === i) cls = 'wrong';
+              } else if (answers[currentQ] === i) cls = 'selected';
+              return `<div class="option ${cls} ${answered ? 'answered' : ''}" onclick="selectOption(${i})">
+                <div class="opt-letter">${answered && i === q.correct ? '✓' : answered && answers[currentQ] === i ? '✗' : letters[i]}</div>
+                <div class="opt-text">${opt}</div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="explanation ${answered ? 'show' : ''} ${answered && answers[currentQ] === q.correct ? 'correct-exp' : 'wrong-exp'}">
+            ${answered ? (answers[currentQ] === q.correct ? '✓ Correct! ' : '✗ Incorrect. ') + q.explanation : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectOption(idx) {
+      if (answers[currentQ] !== undefined) return;
+      answers[currentQ] = idx;
+      const q = questions[currentQ];
+      if (idx === q.correct) score++;
+      document.getElementById('scoreDisplay').textContent = `${score}/${questions.length}`;
+      renderQuestion();
+    }
+
+    function navigate(dir) {
+      const newIdx = currentQ + dir;
+      if (newIdx < 0) return;
+      if (newIdx >= questions.length) {
+        showResults(); return;
+      }
+      currentQ = newIdx;
+      renderQuestion();
+    }
+
+    function showResults() {
+      document.getElementById('quizContainer').style.display = 'none';
+      document.getElementById('quizNav').style.display = 'none';
+      const total = questions.length;
+      const pct = Math.round((score / total) * 100);
+      const rc = document.getElementById('resultsCard');
+      rc.classList.add('show');
+      document.getElementById('resultScore').textContent = `${score}/${total}`;
+      document.getElementById('rbCorrect').textContent = score;
+      document.getElementById('rbWrong').textContent = total - score;
+      document.getElementById('rbPct').textContent = pct + '%';
+
+      let grade, msg, color;
+      if (pct >= 90) { grade = '🏆 Outstanding!'; msg = 'Perfect score! You have mastered this unit.'; color = 'var(--green)'; }
+      else if (pct >= 75) { grade = '🥇 Excellent!'; msg = 'Great work! You have a strong grasp of this unit.'; color = 'var(--accent)'; }
+      else if (pct >= 60) { grade = '🥈 Good Job!'; msg = 'Good effort! Review a few topics and try again.'; color = 'var(--yellow)'; }
+      else { grade = '📚 Keep Studying'; msg = 'Review the curriculum material and try again.'; color = 'var(--red)'; }
+
+      document.getElementById('resultGrade').textContent = grade;
+      document.getElementById('resultMsg').textContent = msg;
+      document.getElementById('resultScore').style.color = color;
+
+      // Save score
+      const scores = JSON.parse(localStorage.getItem('edusphere_scores') || '{}');
+      scores[`unit${currentUnit}`] = { score, total, pct, date: new Date().toLocaleDateString() };
+      localStorage.setItem('edusphere_scores', JSON.stringify(scores));
+      showToast('success', `Quiz complete! Score: ${score}/${total} (${pct}%)`);
+    }
+
+    function retakeQuiz() {
+      loadQuiz(currentUnit, document.querySelectorAll('.unit-btn')[currentUnit - 1]);
+    }
+
+    // Check URL for unit param
+    const urlUnit = new URLSearchParams(location.search).get('unit');
+    if (urlUnit && ALL_QUESTIONS[urlUnit]) {
+      const btn = document.querySelectorAll('.unit-btn')[parseInt(urlUnit)-1];
+      if (btn) loadQuiz(parseInt(urlUnit), btn);
+      else loadQuiz(1, document.querySelectorAll('.unit-btn')[0]);
+    } else {
+      loadQuiz(1, document.querySelectorAll('.unit-btn')[0]);
+    }
+  </script>
+</body>
+</html>
