@@ -2,7 +2,15 @@
 “EduSphere is a modern educational platform that combines study materials, AI tools, and career guidance to help students learn efficiently and prepare for future opportunities.”
 EduSphere Pro
 Empowering Students. Simplifying Learning.
+About EduSphere Pro
 
+EduSphere Pro is an educational web platform designed to simplify student learning by providing structured notes, helpful resources, and career guidance in one place. The platform also integrates AI-based tools to enhance understanding and improve productivity.
+
+Features
+Semester-wise study materials
+AI-powered assistance
+Career path exploration
+Clean and responsive UI
 EduSphere Pro is a modern educational web platform designed to help students access structured study materials, explore career paths, and enhance their learning experience using AI-powered tools.
 
 About the Project
@@ -57,7 +65,3 @@ Contributing
 Contributions, suggestions, and feedback are welcome!
 Feel free to fork the repo and improve it.
 If you like this project, don’t forget to ⭐ the repository!
-
-📢 Tags
-
-edtech learning-platform student-project html css javascript netlify ai-learning
